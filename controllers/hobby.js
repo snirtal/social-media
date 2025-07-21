@@ -24,7 +24,10 @@ const updateHobby = async (req, res) => {
   if (!hobby) return res.status(404).json({ errors: ['Hobby not found'] });
   res.json(hobby);
 };
-
+const postsPerHobby = async (req,res) => {
+  let data = await hobbyService.postsPerHobby()
+  res.render('statistics/postHobbyGraph', {data: data})
+}
 const deleteHobby = async (req, res) => {
   const hobby = await hobbyService.deleteHobby(req.params.id);
   if (!hobby) return res.status(404).json({ errors: ['Hobby not found'] });
