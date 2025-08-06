@@ -19,6 +19,28 @@ const getHobby = async (req, res) => {
   res.json(hobby);
 };
 
+
+const showGroupPage = async (req, res) => {
+  const hobbyId = req.query.hobby;
+
+   hobbyService.getHobbyById(hobbyId)
+    .then(async hobby => {
+      if (!hobby) {
+        return res.status(404).send('Hobby not found');
+      }
+     let usersByHobby = await userService.getUsersByHobbyId(hobbyId);
+     let users = await userService.getUsers();
+     let usersNotInHobby = users.filter(x=> usersByHobby.some(y => y._id.toString() == x._id.toString()) == false);
+     let isHobbyOwner = hobby.createdBy ? req.session.user._id.toString() == hobby.createdBy.toString() : false;
+      res.render('hobbies/group', { hobby: hobby, user: req.session.user, isHobbyOwner, usersByHobby, usersNotInHobby });
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).send('Server error');
+    });
+}
+
+
 const updateHobby = async (req, res) => {
   const hobby = await hobbyService.updateHobby(req.params.id, req.body);
   if (!hobby) return res.status(404).json({ errors: ['Hobby not found'] });
@@ -42,3 +64,4 @@ module.exports = {
   deleteHobby,
   showCreateForm
 };
+
