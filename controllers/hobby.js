@@ -1,25 +1,54 @@
+const user = require('../models/user');
 const hobbyService = require('../services/hobby');
+const userService = require('../services/user')
+const getHobbiesViewPage = async (req, res) => {
+
+  res.render('hobbies/list', { hobbies: await hobbyService.getHobbies(), user: req.session.user });
+};
 
 const getHobbies = async (req, res) => {
-  res.render('hobbies/list', { hobbies: await hobbyService.getHobbies() });
+  try {
+    const hobbies = await hobbyService.getHobbies();
+    res.json(hobbies);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to fetch hobbies' });
+  }
 };
 const showCreateForm = (req, res) => {
   res.render('hobbies/create');
 };
 const createHobby = async (req, res) => {
-    console.log(req)
   const { name, description, practiceTime, maxParticipants } = req.body;
-  await hobbyService.createHobby(name, description, practiceTime, maxParticipants);
-  res.redirect('/hobbies/view'); // or res.render('hobbies/success');
+  await hobbyService.createHobby(name, description, practiceTime, maxParticipants,req.session.user._id);
+  res.render('hobbies/list', {hobbies: await hobbyService.getHobbies(),user: req.session.user}); // or res.render('hobbies/success');
 };
 
-const getHobby = async (req, res) => {
-  const hobby = await hobbyService.getHobbyById(req.params.id);
-  if (!hobby) return res.status(404).json({ errors: ['Hobby not found'] });
-  res.json(hobby);
+const postsPerHobby = async (req,res) => {
+  let data = await hobbyService.postsPerHobby()
+  res.render('statistics/postHobbyGraph', {data: data})
+}
+const getEditPage = async (req,res) => {
+  let data = await hobbyService.getHobbyById(req.params.id)
+  res.render('hobbies/edit', {hobby: data, user: req.session.user})
+}
+
+
+const searchHobbies = async (req, res) => {
+    try {
+        const filters = req.body; 
+
+        if (filters.minPracticeTime && isNaN(Number(filters.minPracticeTime))) {
+            return res.status(400).json({ message: 'minPracticeTime must be a number.' });
+        }
+
+        const hobbies = await hobbyService.searchHobbies(filters);
+        res.json(hobbies);
+    } catch (error) {
+        console.error('Error searching hobbies in controller:', error);
+        res.status(500).json({ message: 'Failed to search hobbies.', error: error.message });
+    }
 };
-
-
 const showGroupPage = async (req, res) => {
   const hobbyId = req.query.hobby;
 
@@ -40,20 +69,23 @@ const showGroupPage = async (req, res) => {
     });
 }
 
+const getHobby = async (req, res) => {
+  const hobby = await hobbyService.getHobbyById(req.params.id);
+  if (!hobby) return res.status(404).json({ errors: ['Hobby not found'] });
+  res.json(hobby);
+};
 
 const updateHobby = async (req, res) => {
   const hobby = await hobbyService.updateHobby(req.params.id, req.body);
   if (!hobby) return res.status(404).json({ errors: ['Hobby not found'] });
   res.json(hobby);
 };
-const postsPerHobby = async (req,res) => {
-  let data = await hobbyService.postsPerHobby()
-  res.render('statistics/postHobbyGraph', {data: data})
-}
+
 const deleteHobby = async (req, res) => {
   const hobby = await hobbyService.deleteHobby(req.params.id);
   if (!hobby) return res.status(404).json({ errors: ['Hobby not found'] });
-  res.json({ message: 'Deleted successfully' });
+  res.render('hobbies/list', { hobbies: await hobbyService.getHobbies(), user: req.session.user });
+
 };
 
 module.exports = {
@@ -62,6 +94,10 @@ module.exports = {
   getHobby,
   updateHobby,
   deleteHobby,
-  showCreateForm
+  showCreateForm,
+  getHobbiesViewPage,
+  showGroupPage,
+  postsPerHobby,
+  getEditPage,
+  searchHobbies
 };
-
