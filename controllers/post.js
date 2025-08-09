@@ -42,8 +42,8 @@ const getHobbyPosts = async (req, res) => {
 };
 
 const createHobbyPost = async (req, res) => {
-  console.log('--- Inside createHobbyPost controller ---');
 
+  if(req.session.user) {
   const { content, hobbyId } = req.body;
 
   const userId = req.session.user._id;
@@ -74,6 +74,9 @@ const createHobbyPost = async (req, res) => {
     // Send a JSON error response instead of just 500
     res.status(500).json({ message: 'Internal server error while creating hobby post.', error: error.message });
   }
+} else {
+  res.render('user/home')
+}
 };
 const toggleLike = async (req,res) => {
  const like = await postService.toggleLike(req.params.id,req.body.userId);
