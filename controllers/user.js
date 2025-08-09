@@ -65,12 +65,22 @@ const showHomePage = (req, res) => {
 
 const showProfilePage = async (req, res) => {
     let hobbies = await hobbyService.getHobbies();
+    // Ensure the user data for the profile page is fresh, especially if it was just updated
+    // or if the session user might be stale.
+    // For a profile page, it's often good practice to fetch the latest user data from DB
+    // rather than relying solely on session, unless session is guaranteed to be updated
+    // immediately upon any profile change.
+    // Assuming req.session.user._id is always available if logged in:
     const user = req.session.user ? await userService.getUserById(req.session.user._id) : null;
 
     if (!user) {
+        // Handle case where user is not found or not logged in
         return res.redirect('/login'); // Or render an error page
     }
 
+    // Update session with the latest user data from DB before rendering profile page
+    // This ensures that the rendered profile page shows the most up-to-date data,
+    // including any new fields that might have been populated by default or in a previous update.
     req.session.user = {
         _id: user._id,
         firstName: user.firstName,
@@ -112,11 +122,17 @@ const userByAgeStatistics = async (req, res) => {
 };
 
 const getUsersViewPage = async (req, res) => {
+    if(req.session.user && req.session.user.isAdmin) {
     let users = await userService.getUsers();
-    res.render('user/view', { users });
+    res.render('user/view', { users }); }
+    else {
+    res.render('user/home')
+    }
 };
 
 const toggleAdmin = async (req, res) => {
+        if(req.session.user && req.session.user.isAdmin) {
+
     try {
         let user = await userService.toggleAdmin(req.params.id);
         res.json(user);
@@ -124,6 +140,7 @@ const toggleAdmin = async (req, res) => {
         console.error('Error toggling admin status:', error);
         res.status(500).json({ errors: ['Failed to toggle admin status.', error.message] });
     }
+} res.status(401)
 };
 
 const getUsers = async (req, res) => {
@@ -239,6 +256,7 @@ const updateUser = async (req, res) => {
 };
 
 const deleteUser = async (req, res) => {
+    if(req.session.user && req.session.isAdmin) {
     try {
         const user = await userService.deleteUser(req.params.id);
         if (!user) return res.status(404).json({ errors: ['User not found'] });
@@ -246,11 +264,13 @@ const deleteUser = async (req, res) => {
     } catch (error) {
         console.error('Error deleting user:', error);
         res.status(500).json({ errors: ['Failed to delete user.', error.message] });
+    } } 
+    else {
+        res.status(401)
     }
 };
 
 const toggleHobby = async (req,res) => {
-console.log('[CONTROLLER] req.params:', req.params);
   let hobbyId = req.params.hobbyId;
   let userId = req.params.id
   let hobby = await hobbyService.getHobbyById(hobbyId);
