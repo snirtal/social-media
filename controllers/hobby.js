@@ -2,8 +2,12 @@ const user = require('../models/user');
 const hobbyService = require('../services/hobby');
 const userService = require('../services/user')
 const getHobbiesViewPage = async (req, res) => {
-
+  if(req.session.user) {
   res.render('hobbies/list', { hobbies: await hobbyService.getHobbies(), user: req.session.user });
+  } else {
+      res.render('user/home', {user: null})
+
+  }
 };
 
 const getHobbies = async (req, res) => {
@@ -16,12 +20,22 @@ const getHobbies = async (req, res) => {
   }
 };
 const showCreateForm = (req, res) => {
+  if(req.session.user) {
   res.render('hobbies/create');
+  } else {
+      res.render('user/home', {user: null})
+
+  }
 };
 const createHobby = async (req, res) => {
+  if(req.session.user) {
   const { name, description, practiceTime, maxParticipants } = req.body;
   await hobbyService.createHobby(name, description, practiceTime, maxParticipants,req.session.user._id);
   res.render('hobbies/list', {hobbies: await hobbyService.getHobbies(),user: req.session.user}); // or res.render('hobbies/success');
+  } else {
+      res.render('user/home', {user: null})
+
+  }
 };
 
 const postsPerHobby = async (req,res) => {
@@ -29,8 +43,13 @@ const postsPerHobby = async (req,res) => {
   res.render('statistics/postHobbyGraph', {data: data})
 }
 const getEditPage = async (req,res) => {
+  if(req.session.user) {
   let data = await hobbyService.getHobbyById(req.params.id)
   res.render('hobbies/edit', {hobby: data, user: req.session.user})
+ } else {
+  res.render('user/home', {user: null})
+
+ }
 }
 
 
@@ -50,6 +69,7 @@ const searchHobbies = async (req, res) => {
     }
 };
 const showGroupPage = async (req, res) => {
+  if(req.session.user) {
   const hobbyId = req.query.hobby;
 
    hobbyService.getHobbyById(hobbyId)
@@ -67,6 +87,10 @@ const showGroupPage = async (req, res) => {
       console.error(err);
       res.status(500).send('Server error');
     });
+  } else {
+      res.render('user/home', {user: null})
+
+  }
 }
 
 const getHobby = async (req, res) => {
@@ -82,10 +106,14 @@ const updateHobby = async (req, res) => {
 };
 
 const deleteHobby = async (req, res) => {
+  if(req.session.user) {
   const hobby = await hobbyService.deleteHobby(req.params.id);
   if (!hobby) return res.status(404).json({ errors: ['Hobby not found'] });
   res.render('hobbies/list', { hobbies: await hobbyService.getHobbies(), user: req.session.user });
+  } else {
+      res.render('user/home', {user: null})
 
+  }
 };
 
 module.exports = {
