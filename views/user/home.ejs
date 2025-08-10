@@ -12,3 +12,68 @@
 
 
 	</div>
+<div id="signInModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Sign In</h2>
+      <button class="close-button" onclick="document.getElementById('signInModal').style.display='none'">&times;</button>
+    </div>
+    <form  style="margin: 0 auto" action="/users/signin" method="POST">
+      <div class="modal-body">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+      <div class="modal-footer">
+        <button type="submit">Sign In</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="signUpModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Sign Up</h2>
+      <button class="close-button" onclick="document.getElementById('signUpModal').style.display='none'">&times;</button>
+    </div>
+    <form  style="margin: 0 auto" action="/users" method="POST">
+      <div class="modal-body">
+        <label for="firstname">First Name</label>
+        <input type="firstname"  name="firstname" required>
+        <label for="lastname">Last Name</label>
+        <input type="lastname"  name="lastname" required>
+        <label for="email">Email</label>
+        <input type="email"  name="email" required>
+        <label for="password">Password</label>
+        <input type="password"  name="password" required>
+        <label for="phone">Phone Number</label>
+        <input type="phone"  name="phone" required>
+      </div>
+      <div class="modal-footer">
+        <button type="submit">Sign In</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+</header>
+
+<script>
+    function openSignIn() {
+        document.getElementById('signInModal').style.display='block'
+    }
+    function closeSignIn() {
+        document.getElementById('signInModal').style.display='none'
+    }
+    function openSignUp() {
+        document.getElementById('signUpModal').style.display='block'
+    }
+    function closeSignUp() {
+        document.getElementById('signUpModal').style.display='none'
+    }
+    document.getElementById('signin').addEventListener('click', openSignIn);
+    document.getElementById('signup').addEventListener('click',openSignUp)
+</script>
