@@ -1,10 +1,221 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>User Feed</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body>
-</body>
-</html>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>User Feed</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <link rel="stylesheet" href="/assets/css/feed.css"/>
+    </head>
+    <body>
+        <div class="sidebar-left">
+            <div class="menu">
+                <% if (user) { %>
+                    <h2>Hi, <%= user.firstName %> <%= user.lastName %></h2>
+                <% } else { %>
+                    <h2>Welcome, Guest!</h2>
+                <% } %>
+                <ul id="menu-links">
+                    <li><a href="/users/feed">Home</a></li>
+                                    <% if (user) { %>
+                    <li><a href="/users/profile">My Profile</a></li>
+                    <%}%>
+                        <li><a href="/hobbies/view">Hobby Settings</a></li>
+                    <% if (user && user.isAdmin) { %>
+                        <li><a href="/users/view">Users Settings</a></li>
+                    <% } %>
+                </ul>
+                <ul>
+                    <li> <a href="/hobbies/statistics">Hobby Statistics</a></li>
+                    <li> <a href="/users/statistics">Users Networking</a></li>
+                    <li><a href="/posts/statistics">Posts Statistics</a></li>
+                    <li><a href="/users/usersbyage">User By Age Statistics</a></li>
+                                                    <% if (user) { %>
+
+                    <li><a onclick="logout()">Logout</a></li>
+                    <%}%>
+                    <li><a href="/users/about">About</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="main-content-area">
+            <div class="video-banner">
+                <video autoplay muted loop id="myVideo">
+                    <source src="/assets/2853795-uhd_3840_2160_24fps.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div class="title"><div> Social Hobby</div></div>
+            </div>
+            <% if(user) { %>
+            <div class="create-post-section">
+                <h2>Create New Post</h2>
+                <form id="createPostForm" action="/posts" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="userId" value="<%= user._id || '' %>">
+
+                    <textarea name="content" rows="4" placeholder="Share your thoughts or updates..."></textarea>
+
+                    <div class="image-upload-area" id="imageUploadArea">
+                        <input type="file" id="imageUpload" name="image" accept="image/*,video/*">
+                        <i class="fas fa-camera"></i>
+                        <p>Click or drag image here to upload</p>
+                    </div>
+
+                    <div class="image-preview" id="imagePreview">
+                    </div>
+
+                    <div class="post-actions">
+                        <button type="button" class="cancel-btn" id="cancelPostBtn">Cancel</button>
+                        <button type="submit">Post to Feed</button>
+                    </div>
+                </form>
+            </div>
+            <% } %>
+            <div id="posts" class="posts-container">
+                <h2>Recent Posts</h2>
+                <% if (typeof allPosts !== 'undefined' && allPosts.length === 0) { %>
+                    <p class="no-posts">No posts yet. Be the first to share something!</p>
+                <% } else if (typeof allPosts === 'undefined') { %>
+                    <p class="no-posts" style="color: red;">Error: Posts data not available. Please ensure the server passes 'allPosts' to the template.</p>
+                <% } else { %>
+                    <% allPosts.forEach(post => { %>
+                        <div class="post" data-post-id="<%= post._id %>">
+                            <div class="post-header">
+                                <div class="avatar"><%= post.user.firstName.charAt(0) + post.user.lastName.charAt(0) %></div>
+                                <div class="user-info">
+                                    <strong><%= post.user.firstName %> <%= post.user.lastName %></strong>
+                                    <small>
+                                        <% if (post.created) { %>
+                                            <%= new Date(post.created).toLocaleString('en-US', { hour: '2-digit', minute: '2-digit', month: 'short', day: 'numeric', year: 'numeric' }) %>
+                                        <% } else { %>
+                                            Date N/A
+                                        <% } %>
+                                    </small>
+                                </div>
+                                <% if (user && post.user._id.toString() === user._id.toString()) { %>
+                                    <i class="fas fa-times delete-post-icon" data-post-id="<%= post._id %>"></i>
+                                <% } %>
+                                                            <% if (user && post.user._id.toString() === user._id.toString()) { %>
+                                    <i class="fas fa-edit edit-post-icon" data-post-id="<%= post._id %>"></i>
+                                    <i class="fas fa-times delete-post-icon" data-post-id="<%= post._id %>"></i>
+                                <% } %>
+                            </div>
+    <% if (post.imagePath) { 
+        const extension = post.imagePath.split('.').pop().toLowerCase();
+        const isVideo = ['mp4', 'webm', 'ogg', 'mov'].includes(extension);
+    %>
+        <% if (isVideo) { %>
+            <video controls class="post-video">
+                <source src="/<%= post.imagePath %>" type="video/<%= extension %>">
+                Your browser does not support the video tag.
+            </video>
+        <% } else { %>
+            <img src="/<%= post.imagePath %>" alt="Post image" class="post-image">
+        <% } %>
+    <% } %>
+                                                <p class="post-content" data-original-content="<%= post.content %>"><%= post.content %></p>
+                            <div class="edit-actions" style="display: none;">
+                                <button class="cancel-edit-btn">Cancel</button>
+                                <button class="save-btn">Save</button>
+                            </div>
+                            <div class="post-footer">
+                                <div class="time-info">
+                                    <i class="far fa-clock"></i>
+                                    <small>
+                                        <% if (post.created) { %>
+                                            <%= new Date(post.created).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) %>
+                                        <% } %>
+                                    </small>
+                                </div>
+                                        <% if(user) { %>  
+                                <div class="post-likes">
+                                    <%
+    const likeIds = Array.isArray(post.likes) ? post.likes.map(like => like.toString()) : [];
+    const isLiked = user && likeIds.includes(user._id.toString());
+    %>
+    <i class="far fa-heart like-button <%= isLiked ? 'fas liked' : '' %>"
+    data-post-id="<%= post._id %>"
+    data-user-id="<%= user._id %>">
+    </i>
+                                    <span class="like-count" data-post-id="<%= post._id %>">
+                                        <%= post.likes ? post.likes.length : 0 %>
+                                    </span>
+                                </div>
+                                <%}%>
+                            </div>
+                        </div>
+                    <% }) %>
+                <% } %>
+            </div>
+        </div>
+
+        <div class="sidebar-right">
+            <div class="friends-suggestions">
+                <h2>Suggestions</h2>
+                <div class="filter-users-button-container">
+                    <button id="openFilterModalBtn">Filter Users</button>
+                </div>
+                <div id="suggestionsList">
+                <% if(user == null) { %> 
+                    <h2> Log In \ Register To See User Suggestions</h2>
+                <%}%>
+                </div>
+            </div>
+        </div>
+                <% if(user) { %>
+
+        <input id="user_id" type="hidden" value="<%=user._id%>"/>
+    <% }%>
+    <div id="filterModal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="modal-close-button" id="closeFilterModalBtn">&times;</span>
+            <h2>Filter Suggestions</h2>
+
+            <div class="filter-section">
+                <label for="searchName">Search by Name:</label>
+                <input type="text" id="searchName" placeholder="Enter name">
+
+                <label for="filterAgeMin">Age (Min):</label>
+                <input type="number" id="filterAgeMin" placeholder="Min Age">
+
+                <label for="filterAgeMax">Age (Max):</label>
+                <input type="number" id="filterAgeMax" placeholder="Max Age">
+
+                <label for="filterCity">City:</label>
+                <input type="text" id="filterCity" placeholder="Enter City">
+
+                <label for="filterHobby">Hobby:</label>
+                <select id="filterHobby">
+                    <option value="">Any Hobby</option>
+                    </select>
+
+                <label for="filterGender">Gender:</label>
+                <select id="filterGender">
+                    <option value="">Any Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                    <option value="Prefer not to say">Prefer not to say</option>
+                </select>
+
+                <label for="filterPreferredCommunication">Preferred Communication:</label>
+                <select id="filterPreferredCommunication">
+                    <option value="">Any Preference</option>
+                    <option value="Email">Email</option>
+                    <option value="Phone">Phone</option>
+                    <option value="SMS">SMS</option>
+                </select>
+                <button id="applyFiltersBtn">Apply Filters</button>
+            </div>
+        </div>
+    </div>
+            <div id="temp"></div>
+
+      
+    </body>
+    </html>
+
+    <script src="/assets/script/feed.js"></script>
