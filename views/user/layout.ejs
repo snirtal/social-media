@@ -1,0 +1,14 @@
+
+<% if (showFloatingRedirect) { %>
+<link rel="stylesheet" href="/assets/css/layout.css"/>
+<div id="floatingRedirect" class="floating-redirect" onclick="redirectToHome()">
+  <span class="floating-redirect-icon">&#x2190;</span> <span>Go to Home</span>
+</div>
+
+<script>
+  function redirectToHome() {
+    window.location.href = '/users/feed'; 
+  }
+
+</script>
+<% } %>
