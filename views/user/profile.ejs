@@ -1,0 +1,129 @@
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBbG4piWyKLxPrBzJGD0sSt7XQVZNAu0G8&libraries=maps,marker&callback=initMap"></script>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>My Profile</title>
+    <link rel="stylesheet" href="/assets/css/profile.css"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
+</head>
+<body>
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v20.0&appId=24150042914685949&autoLogAppEvents=1"></script>
+
+    <div class="profile-page">
+        <div class="profile-header">
+            <div class="cover"></div>
+            <div class="avatar" id="avatarContainer">
+                <img id="profileAvatar" src="<%= user.profileAvatar || 'https://static.vecteezy.com/system/resources/previews/002/002/403/non_2x/man-with-beard-avatar-character-isolated-icon-free-vector.jpg' %>" alt="Profile Photo" />
+            </div>
+        </div>
+        <div class="profile-info">
+            <h1><%=user.firstName%> <%=user.lastName%></h1>
+        </div>
+        <form class="profile-form">
+            <div class="form-group">
+                <label for="firstname">First Name</label>
+                <input id="firstname" type="text" value="<%=user.firstName%>" />
+            </div>
+            <div class="form-group">
+                <label for="lastname">Last Name</label>
+                <input id="lastname" type="text" value="<%=user.lastName%>" />
+            </div>
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input id="email" type="email" value="<%=user.email%>" />
+            </div>
+            <div class="form-group">
+                <label for="PhoneNumber">Phone Number</label>
+                <input id="PhoneNumber" type="text" value="<%=user.phoneNumber%>" />
+            </div>
+            <div class="form-group">
+                <label for="Age">Age</label>
+                <input id="Age" type="number" value="<%=user.age%>" />
+            </div>
+            <div class="form-group">
+                <label for="City">City</label>
+                <input id="City" type="text" value="<%=user.city%>" />
+            </div>
+
+            <div class="form-group">
+                <label for="bio">Bio</label>
+                <textarea id="bio" placeholder="Tell us a little about yourself..."><%= user.bio || '' %></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="gender">Gender</label>
+                <select id="gender">
+                    <option value="">Select Gender</option>
+                    <option value="Male" <%= user.gender === 'Male' ? 'selected' : '' %>>Male</option>
+                    <option value="Female" <%= user.gender === 'Female' ? 'selected' : '' %>>Female</option>
+                    <option value="Other" <%= user.gender === 'Other' ? 'selected' : '' %>>Other</option>
+                    <option value="Prefer not to say" <%= user.gender === 'Prefer not to say' ? 'selected' : '' %>>Prefer not to say</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="preferredCommunication">Preferred Communication</label>
+                <select id="preferredCommunication">
+                    <option value="">Select Preference</option>
+                    <option value="Email" <%= user.preferredCommunication === 'Email' ? 'selected' : '' %>>Email</option>
+                    <option value="Phone" <%= user.preferredCommunication === 'Phone' ? 'selected' : '' %>>Phone</option>
+                    <option value="SMS" <%= user.preferredCommunication === 'SMS' ? 'selected' : '' %>>SMS</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Your Location</label>
+                <div id="map"></div>
+                <input type="hidden" id="latitude" name="latitude" value="<%= user ? user.latitude : '' %>">
+                <input type="hidden" id="longitude" name="longitude" value="<%= user ? user.longitude : '' %>">
+                <p style="font-size: 0.8em; color: #666; margin-top: 5px;">Click on the map to set your location.</p>
+            </div>
+
+            <div id="hobbies" class="form-group">
+                <label>Hobbies</label>
+                <div class="hobbies-grid">
+                    <% hobbies.forEach(hobby => { %>
+                        <div class="hobby-item <%= user.hobbies.includes(hobby._id.toString()) ? 'selected' : '' %>" data-hobby-id="<%= hobby._id %>">
+                            <input
+                                type="checkbox"
+                                name="hobbies"
+                                value="<%= hobby._id %>"
+                                <%= user.hobbies.includes(hobby._id.toString()) ? 'checked' : '' %>
+                            />
+                            <%= hobby.name %>
+                        </div>
+                    <% }) %>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button id="submit" type="button" >Save Changes</button>
+                <button id="shareHobbiesFacebook" type="button">Share Hobbies on Facebook</button>
+            </div>
+        </form>
+    </div>
+
+    <div id="imageSelectionModal" class="image-modal-overlay">
+        <div class="image-modal-content">
+            <span class="modal-close-button" id="closeModalButton">&times;</span>
+            <h2>Choose Your Profile Picture</h2>
+            <div class="image-options" id="imageOptionsContainer">
+            </div>
+            <div class="form-actions">
+                <button id="selectImageButton">Select Image</button>
+            </div>
+        </div>
+    </div>
+<script>
+                const userId = <%- JSON.stringify(user._id) %>;
+</script> 
+    <script src="/assets/script/profile.js"></script>
+    <%- include('layout', { showFloatingRedirect: true }) %>
+
+</body>
+</html>
