@@ -1,0 +1,21 @@
+  .floating-redirect {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .floating-redirect:hover {
+    background-color: rgba(0, 0, 0, 0.9);
+  }
+  .floating-redirect-icon {
+    font-size: 24px; 
+  }
