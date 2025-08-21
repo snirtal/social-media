@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hobby Post Counts (D3.js)</title>
+    <!-- Tailwind CSS CDN for basic styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- D3.js CDN -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link rel="stylesheet" href="/assets/css/statistics/post-hobby-graph.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Hobby Post Counts</h1>
+
+        <div id="errorMessage" class="error hidden">
+            Failed to load data. Please try again later.
+        </div>
+
+        <div id="chartContainer" class="chart-container hidden">
+            <!-- D3.js chart will be rendered here -->
+        </div>
+    </div>
+<script data-data="<%= JSON.stringify(data) %>">
+    // This script block should be placed after the HTML elements it references
+    // and before the main D3 script block.
+    const data = JSON.parse(document.currentScript.dataset.data);
+</script>
+    <script src="/assets/script/statistics/post-hobby-graph.js"></script>
+</body>
+    <%- include('../user/layout', { showFloatingRedirect: true }) %> 
+</html>
