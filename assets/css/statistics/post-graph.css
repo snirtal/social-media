@@ -1,0 +1,46 @@
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+            background: #161b22;
+            text-align: center;
+            color: #00bcd4;
+        }
+        h1 {
+            color: #00bcd4;
+        }
+        .chart-container {
+            border: 1px solid #ccc;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 8pt;
+            padding: 15px;
+            overflow: hidden; /* To contain the SVG */
+            margin-top: 20px;
+        }
+        .axis text {
+            font-size: 10px;
+            fill: #666;
+        }
+        .axis line, .axis path {
+            stroke: #ccc;
+            stroke-width: 1px;
+        }
+        .x-axis-label, .y-axis-label {
+            font-size: 12px;
+            fill: #333;
+            text-anchor: middle;
+        }
+        .tooltip {
+            position: absolute;
+            text-align: center;
+            width: auto;
+            height: auto;
+            padding: 8px;
+            font: 12px sans-serif;
+            background: lightsteelblue;
+            border: 0px;
+            border-radius: 8px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
