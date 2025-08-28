@@ -27,23 +27,19 @@
 
                 const posts = await response.json();
 
-                // 1. Process data: Count posts per date
                 const postsByDate = {};
                 posts.forEach(post => {
-                    // Extract date part (YYYY-MM-DD)
                     const date = new Date(post.created).toISOString().split('T')[0];
                     postsByDate[date] = (postsByDate[date] || 0) + 1;
                 });
 
-                // Convert to array of {date: "YYYY-MM-DD", count: N} objects
                 const chartData = Object.keys(postsByDate).map(date => ({
-                    date: d3.timeParse("%Y-%m-%d")(date), // Parse string to Date object
+                    date: d3.timeParse("%Y-%m-%d")(date), 
                     count: postsByDate[date]
-                })).sort((a, b) => a.date - b.date); // Sort by date
+                })).sort((a, b) => a.date - b.date); 
 
                 console.log('Chart Data:', chartData);
 
-                // 2. Define Scales
                 const xScale = d3.scaleBand()
                     .domain(chartData.map(d => d.date))
                     .range([0, width])
@@ -53,21 +49,17 @@
                     .domain([0, d3.max(chartData, d => d.count)]).nice()
                     .range([height, 0]);
 
-                // Function to get a darker blue color based on index
                 const getDarkerBlue = (index, totalLength) => {
-                    // Start from 0.3 (or higher, like 0.4, 0.5 for even darker)
-                    // and scale up to 1.0 (darkest blue)
-                    const startValue = 0.3; // Adjust this value to control the lightest shade (higher = darker start)
+                    const startValue = 0.3; 
                     const endValue = 1.0;
-                    const normalizedIndex = index / (totalLength - 1); // Normalize index to [0, 1]
+                    const normalizedIndex = index / (totalLength - 1); 
                     const interpolatedValue = startValue + normalizedIndex * (endValue - startValue);
                     return d3.interpolateBlues(interpolatedValue);
                 };
 
 
-                // 3. Add Axes
                 const xAxis = d3.axisBottom(xScale)
-                    .tickFormat(d3.timeFormat("%b %d")); // Format date for display
+                    .tickFormat(d3.timeFormat("%b %d"));
 
                 const yAxis = d3.axisLeft(yScale);
 
@@ -76,7 +68,7 @@
                     .attr("transform", `translate(0,${height})`)
                     .call(xAxis)
                     .selectAll("text")
-                    .attr("transform", "rotate(-45)") // Rotate labels for better readability
+                    .attr("transform", "rotate(-45)") 
                     .style("text-anchor", "end");
 
                 svg.append("text")
@@ -96,7 +88,6 @@
                     .attr("x", -(height / 2))
                     .text("Number of Posts");
 
-                // 4. Draw Bars
                 svg.selectAll(".bar")
                     .data(chartData)
                     .enter().append("rect")
@@ -105,14 +96,11 @@
                     .attr("y", d => yScale(d.count))
                     .attr("width", xScale.bandwidth())
                     .attr("height", d => height - yScale(d.count))
-                    .attr("fill", (d, i) => getDarkerBlue(i, chartData.length)) // Set initial fill color
-
-
+                    .attr("fill", (d, i) => getDarkerBlue(i, chartData.length)) 
             } catch (error) {
                 console.error('Error fetching posts or building chart:', error);
                 alert('Failed to load posts chart.');
             }
         }
 
-        // Call the function to build the chart when the page loads
         document.addEventListener('DOMContentLoaded', fetchPostsAndBuildChart);
