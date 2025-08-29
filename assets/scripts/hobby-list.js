@@ -104,7 +104,6 @@
             });
 
             if (res.ok) {
-                // Remove the hobby card from the DOM
                 document.getElementById(id).remove();
                 showCustomAlert('Hobby deleted successfully!');
             } else {
@@ -117,12 +116,10 @@
         }
     }
 
-    // Search Modal Logic
     const searchModal = document.getElementById('searchModal');
     const openSearchModalBtn = document.getElementById('openSearchModalBtn');
     const closeSearchModalBtn = document.getElementById('closeSearchModalBtn');
     const performSearchBtn = document.getElementById('performSearchBtn');
-
     const searchNameInput = document.getElementById('searchName');
     const minPracticeTimeInput = document.getElementById('minPracticeTime');
     const maxPracticeTimeInput = document.getElementById('maxPracticeTime');
@@ -140,7 +137,6 @@
     if (closeSearchModalBtn) {
         closeSearchModalBtn.addEventListener('click', () => {
             searchModal.style.display = 'none'; // Hide modal
-            // Optionally clear search results and inputs when closing
             searchResultsList.innerHTML = '<p class="no-results">Enter search criteria and click \'Search\'.</p>';
             searchNameInput.value = '';
             minPracticeTimeInput.value = '';
@@ -155,15 +151,12 @@
         performSearchBtn.addEventListener('click', async () => {
             const filters = {
                 name: searchNameInput.value,
-                // Convert to number or keep undefined if empty
                 minPracticeTime: minPracticeTimeInput.value ? parseInt(minPracticeTimeInput.value) : undefined,
                 maxPracticeTime: maxPracticeTimeInput.value ? parseInt(maxPracticeTimeInput.value) : undefined,
                 minParticipants: minParticipantsInput.value ? parseInt(minParticipantsInput.value) : undefined,
                 maxParticipants: maxParticipantsInput.value ? parseInt(maxParticipantsInput.value) : undefined,
                 createdByUserName: createdByUserNameInput.value
             };
-
-            // Remove empty string values from filters to avoid sending unnecessary query parameters
             for (const key in filters) {
                 if (filters[key] === '') {
                     delete filters[key];
@@ -181,8 +174,6 @@
                     },
                     body: JSON.stringify(filters) // Send filters in the request body
                 });
-                // --- FIX END ---
-                
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
