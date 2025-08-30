@@ -50,17 +50,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Call initially for all posts rendered by EJS
-    attachPostEventListeners();
-    // Initialize like status for already rendered posts
+    attachPostEventListeners();    
     initializeLikeStatus();
-
-
-
-
-
-
-
     
     // --- Post Creation Logic ---
     if (imageUploadInput) { // Ensure element exists before adding listeners
