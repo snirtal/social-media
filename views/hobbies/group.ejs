@@ -10,7 +10,6 @@
 </head>
 <body>
     <%- include('../user/layout', { showFloatingRedirect: true }) %>
-
     <div class="container">
         <div class="group-header">
             <h1>
@@ -25,7 +24,6 @@
                 </div>
             <% } %>
         </div>
-
         <div class="create-post-section">
             <h2>Create New Post</h2>
             <form id="createPostForm" action="/posts/hobby" method="POST" enctype="multipart/form-data">
