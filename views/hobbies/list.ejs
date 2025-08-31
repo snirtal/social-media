@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+<head>
+    <title>Manage Hobbies</title>
+    <link rel="stylesheet" href="/assets/css/hobby-list.css">
+
+</head>
+
+<body>
+    <header>
+        <h1>Control Panel | Manage Hobbies</h1>
+    </header>
+    <%- include('../user/layout', { showFloatingRedirect: true }) %> 
+
+    <div class="container">
+        <div class="action-buttons-container">
+                            <% if (user && user.isAdmin) { %>
+   <a href="/hobbies/create" class="add-button">+ Add New Hobby</a>
+                           <% } %>
+            <a id="openSearchModalBtn" class="add-button"><i class="fas fa-search"></i> Search Hobbies</a>
+        </div>
+
+        <div id="hobbiesList">
+            <% hobbies.forEach(hobby => { %>
+                <div id="<%=hobby._id%>" class="hobby-card">
+                            <% if (user && user.isAdmin) { %>
+                    <div style="cursor: pointer;" onclick="window.location.href='/hobbies/edit/<%=hobby._id%>'" class="hobby-name"><%= hobby.name %></div>
+                    <% } else {%>
+                                        <div class="hobby-name"><%= hobby.name %></div>
+                                <%}%>
+                    <div class="hobby-description"><%= hobby.description %></div>
+                    <div class="hobby-details">
+                        Practice Time: <%= hobby.practiceTime %> hrs | Max Participants: <%= hobby.maxParticipants %>
+                        <% if (hobby.owner && hobby.owner.firstName && hobby.owner.lastName) { %>
+                            | Created By: <%= hobby.owner.firstName %> <%= hobby.owner.lastName %>
+                        <% } %>
+                    </div>
+                    <div class="actions">
+                                        <% if (user && user.isAdmin) { %>
+
+                        <button class="btn-delete" onclick="deleteHobby('<%= hobby._id %>')">X</button>
+                                           <% }    %>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    </div>
+
+    <!-- Search Modal Structure -->
+    <div id="searchModal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="modal-close-button" id="closeSearchModalBtn">&times;</span>
+            <h2>Search Hobbies</h2>
+
+            <div class="form-group">
+                <label for="searchName">Hobby Name:</label>
+                <input type="text" id="searchName" placeholder="e.g., 'Reading', 'Sports'">
+            </div>
+
+            <div class="form-group">
+                <label for="minPracticeTime">Min Practice Time (hrs):</label>
+                <input type="number" id="minPracticeTime" placeholder="e.g., 5">
+            </div>
+
+            <div class="form-group">
+                <label for="maxPracticeTime">Max Practice Time (hrs):</label>
+                <input type="number" id="maxPracticeTime" placeholder="e.g., 20">
+            </div>
+
+            <div class="form-group">
+                <label for="minParticipants">Min Participants:</label>
+                <input type="number" id="minParticipants" placeholder="e.g., 2">
+            </div>
+
+            <div class="form-group">
+                <label for="maxParticipants">Max Participants:</label>
+                <input type="number" id="maxParticipants" placeholder="e.g., 10">
+            </div>
+
+            <div class="form-group">
+                <label for="createdByUserName">Created By (User Name):</label>
+                <input type="text" id="createdByUserName" placeholder="e.g., 'John Doe'">
+            </div>
+
+            <div style="text-align: right; margin-top: 1.5rem;">
+                <button id="performSearchBtn" class="btn search-button">Search</button>
+            </div>
+
+            <div class="search-results-container">
+                <h3>Search Results:</h3>
+                <div id="searchResultsList">
+                    <p class="no-results">Enter search criteria and click 'Search'.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+<script src="/assets/script/hobby-list.js"></script>

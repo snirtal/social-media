@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><%= hobby.name %> Group</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/assets/css/group.css"/>
+    <link rel="stylesheet" href="/assets/css/admin-group.css"/>
+</head>
+<body>
+    <%- include('../user/layout', { showFloatingRedirect: true }) %>
+    <div class="container">
+        <div class="group-header">
+            <h1>
+                <% if(isHobbyOwner) {%> <span style="font-size: 0.8em; opacity: 0.7;">Admin:</span> <% } %> <%= hobby.name %> Group
+            </h1>
+            <p class="description"><%= hobby.description %></p>
+            <% if(isHobbyOwner) {%>
+                <div class="action-buttons">
+                    <button id="openPostSearchModalBtn" class="btn"><i class="fas fa-search"></i> Search Posts</button>
+                    <button id="openAddMemberModalBtn" class="btn admin-btn"><i class="fas fa-user-plus"></i> Add Member</button>
+                    <button id="openRemoveMemberModalBtn" class="btn admin-btn"><i class="fas fa-user-minus"></i> Remove Member</button>
+                </div>
+            <% } %>
+        </div>
+        <div class="create-post-section">
+            <h2>Create New Post</h2>
+            <form id="createPostForm" action="/posts/hobby" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="hobbyId" value="<%= hobby._id %>">
+                <input type="hidden" name="userId" value="<%= user._id || '' %>">
+
+                <textarea name="content" rows="4" placeholder="Share your thoughts or updates with the group..."></textarea>
+
+                <div class="image-upload-area" id="imageUploadArea">
+                    <input type="file" id="imageUpload" name="image" accept="image/*, video/*">
+                    <i class="fas fa-camera"></i>
+                    <p>Click or drag image here to upload</p>
+                </div>
+
+                <div class="image-preview" id="imagePreview">
+                </div>
+
+                <div class="post-actions">
+                    <button type="button" class="cancel-btn" id="cancelPostBtn">Cancel</button>
+                    <button type="submit">Post to Group</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="posts">
+            <h2>Recent Posts</h2>
+            <% if (hobby.posts.length === 0) { %>
+                <p class="no-posts">No posts yet. Be the first to write something!</p>
+            <% } else { %>
+                <% hobby.posts.forEach(post => { %>
+                    <div class="post" data-post-id="<%= post._id %>">
+                        <div class="post-header">
+                            <div class="avatar"><%= post.user.firstName.charAt(0) + post.user.lastName.charAt(0) %></div>
+                            <div class="user-info">
+                                <strong><%= post.user.firstName %> <%= post.user.lastName %></strong>
+                                <small>
+                                    <% if (post.created) { %>
+                                        <%= new Date(post.created).toLocaleString('en-US', { hour: '2-digit', minute: '2-digit', month: 'short', day: 'numeric', year: 'numeric' }) %>
+                                    <% } else { %>
+                                        Date N/A
+                                    <% } %>
+                                </small>
+                            </div>
+                            <% if (user && (post.user._id == user._id || isHobbyOwner)) { %>
+                                <i class="fas fa-edit edit-post-icon" data-post-id="<%= post._id %>"></i>
+                                <i class="fas fa-times delete-post-icon" data-post-id="<%= post._id %>"></i>
+                            <% } %>
+                        </div>
+<% if (post.imagePath) { 
+    const extension = post.imagePath.split('.').pop().toLowerCase();
+    const isVideo = ['mp4', 'webm', 'ogg', 'mov'].includes(extension);
+%>
+    <% if (isVideo) { %>
+        <video controls class="post-video">
+            <source src="/<%= post.imagePath %>" type="video/<%= extension %>">
+            Your browser does not support the video tag.
+        </video>
+    <% } else { %>
+        <img src="/<%= post.imagePath %>" alt="Post image" class="post-image">
+    <% } %>
+<% } %>
+                        <p class="post-content" data-original-content="<%= post.content %>"><%= post.content %></p>
+                        <div class="edit-actions" style="display: none;">
+                            <button class="cancel-edit-btn">Cancel</button>
+                            <button class="save-btn">Save</button>
+                        </div>
+                        <div class="post-footer">
+                            <div class="time-info">
+                                <i class="far fa-clock"></i> <small><%= new Date(post.created).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) %></small>
+                            </div>
+                            <div class="post-likes">
+                                <i class="far fa-heart like-button <% if (post.likes && user && post.likes.includes(user._id.toString())) { %>fas liked<% } %>" data-post-id="<%= post._id %>" data-user-id="<%= user._id %>"></i>
+                                <span class="like-count" data-post-id="<%= post._id %>">
+                                    <%= post.likes ? post.likes.length : 0 %>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } %>
+        </div>
+
+    </div>
+        <div class="hobby-members-section">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Group Members</h2>
+            <% if (usersByHobby && usersByHobby.length > 0) { %>
+                <ul class="member-list">
+                    <% usersByHobby.forEach(member => { %>
+                        <li class="member-item">
+                            <div class="member-avatar">
+                                <% if (member.profileAvatar) { %>
+                                    <img src="<%= member.profileAvatar %>" alt="<%= member.firstName %> <%= member.lastName %>">
+                                <% } else { %>
+                                    <%= member.firstName.charAt(0) + member.lastName.charAt(0) %>
+                                <% } %>
+                            </div>
+                            <div class="member-info">
+                                <div class="member-name"><%= member.firstName %> <%= member.lastName %></div>
+                                <div class="member-details">
+                                    <% if (member.city) { %>
+                                        <%= member.city %>
+                                    <% } %>
+                                    <% if (member.city && member.age) { %>
+                                        &bull;
+                                    <% } %>
+                                    <% if (member.age) { %>
+                                        <%= member.age %> years old
+                                    <% } %>
+                                </div>
+                            </div>
+                        </li>
+                    <% }) %>
+                </ul>
+            <% } else { %>
+                <p class="no-members text-gray-500 text-sm">No members found for this hobby yet.</p>
+            <% } %>
+        </div>
+    <div id="postSearchModal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="modal-close-button" id="closePostSearchModalBtn">&times;</span>
+            <h2>Search Posts in <%= hobby.name %></h2>
+
+            <div class="search-form-group">
+                <label for="searchContent">Content Keyword:</label>
+                <input type="text" id="searchContent" placeholder="e.g., 'event', 'tip'">
+            </div>
+
+            <div class="search-form-group">
+                <label for="searchUserName">Posted By (Name):</label>
+                <input type="text" id="searchUserName" placeholder="e.g., 'John Doe'">
+            </div>
+
+            <div class="search-form-group">
+                <label for="searchStartDate">From Date:</label>
+                <input type="date" id="searchStartDate">
+            </div>
+
+            <div class="search-form-group">
+                <label for="searchEndDate">To Date:</label>
+                <input type="date" id="searchEndDate">
+            </div>
+
+            <div class="search-button-container">
+                <button id="performPostSearchBtn">Search Posts</button>
+            </div>
+
+            <div class="search-results-container" id="postSearchResults">
+                <p class="no-search-results">Enter criteria and click 'Search Posts' to find results.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="addMemberModal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="modal-close-button" id="closeAddMemberModalBtn">&times;</span>
+            <h2>Add Member to <%= hobby.name %></h2>
+            <div class="modal-form-group">
+                <select id="addMemberSelect">
+                    <option value="">-- Select a Member --</option>
+                    <% usersNotInHobby.forEach(member => { %>
+                        <% if (member._id.toString() !== user._id.toString()) { %>
+                            <option value="<%= member._id %>"><%= member.firstName %> <%= member.lastName %> (<%= member.email %>)</option>
+                        <% } %>
+                    <% }); %>
+                </select>
+            </div>
+                        <div class="modal-button-container">
+                <button id="addMemberBtn">Add Member</button>
+            </div>
+            <div id="addMemberMessage" class="modal-message"></div>
+        </div>
+            </div>
+
+    </div>
+
+    <div id="removeMemberModal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="modal-close-button" id="closeRemoveMemberModalBtn">&times;</span>
+            <h2>Remove Member from <%= hobby.name %></h2>
+            <div class="modal-form-group">
+                <label for="removeMemberSelect">Select Member to Remove:</label>
+                <select id="removeMemberSelect">
+                    <option value="">-- Select a Member --</option>
+                    <% usersByHobby.forEach(member => { %>
+                        <% if (member._id.toString() !== user._id.toString()) { %>
+                            <option value="<%= member._id %>"><%= member.firstName %> <%= member.lastName %> (<%= member.email %>)</option>
+                        <% } %>
+                    <% }); %>
+                </select>
+            </div>
+            <div class="modal-button-container">
+                <button id="removeMemberBtn">Remove Member</button>
+            </div>
+            <div id="removeMemberMessage" class="modal-message"></div>
+        </div>
+    </div>
+
+    <input type="hidden" id="currentUserId" value="<%= user._id %>">
+    <input type="hidden" id="currentHobbyId" value="<%= hobby._id %>">
+
+
+</body>
+</html>
+    <script src="/assets/script/group.js"></script>
+    <script src="/assets/script/group-admin.js"></script>
+    <script>
+        document.querySelectorAll('.like-button').forEach(button => {
+            const postId = button.dataset.postId;
+            const currentUserId = button.dataset.userId;
+       const post = <%= JSON.stringify(hobby.posts) %>.find(p => p._id === postId);
+            if (post && post.likes && currentUserId && post.likes.includes(currentUserId)) {
+                button.classList.remove('far');
+                button.classList.add('fas', 'liked');
+            }
+        });
+
+    </script>
