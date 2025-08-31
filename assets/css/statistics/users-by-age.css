@@ -1,0 +1,51 @@
+    body {
+            font-family: 'Inter', sans-serif;
+            background-color: #161b22;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align to top for better content flow */
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-lg */
+            width: 100%;
+            max-width: 900px; /* Adjusted width for 2D chart */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .no-data {
+            text-align: center;
+            padding: 2rem;
+            color: #6b7280; /* text-gray-500 */
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 500px; /* Fixed height for the chart area */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 1.5rem;
+        }
+        .bar {
+            fill: #3b82f6; /* Tailwind blue-500 */
+            transition: fill 0.3s ease;
+        }
+        .bar:hover {
+            fill: #2563eb; /* Tailwind blue-600 */
+        }
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: #d1d5db; /* Tailwind gray-300 */
+            shape-rendering: crispEdges;
+        }
+        .axis text {
+            font-size: 0.875rem; /* text-sm */
+            fill: #4b5563; /* text-gray-700 */
+        }
