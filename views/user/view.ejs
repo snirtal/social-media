@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Users List</title>
+<link rel="stylesheet" href="/assets/css/view-users.css"/>
+
+</head>
+<body>
+  <div class="container">
+    <h1>Users</h1>
+
+    <!-- Canvas to show admin vs regular users -->
+    <canvas id="userCanvas" width="700" height="100"></canvas>
+
+    <% if (users.length === 0) { %>
+      <p>No users found.</p>
+    <% } else { %>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% users.forEach(user => { %>
+            <tr id="user-<%= user._id %>">
+              <td><%= user.firstName %> <%= user.lastName %> <% if (user.isAdmin) { %><strong>(Admin)</strong><% } %></td>
+              <td><%= user.email %></td>
+              <td>
+                <button class="delete-button" onclick="deleteUser('<%= user._id %>')">Delete</button>
+                <button class="admin-button" onclick="toggleAdmin('<%= user._id %>')">
+                  <% if (user.isAdmin) { %>Remove Admin<% } else { %>Make Admin<% } %>
+                </button>
+              </td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    <% } %>
+  </div>
+<script>
+    const users = <%- JSON.stringify(users) %>;
+
+</script>
+<script src="/assets/script/view-users.js"></script>
+
+  <%- include('layout', { showFloatingRedirect: true }) %>
+</body>
+</html>
