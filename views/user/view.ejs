@@ -9,10 +9,8 @@
 <body>
   <div class="container">
     <h1>Users</h1>
-
     <!-- Canvas to show admin vs regular users -->
     <canvas id="userCanvas" width="700" height="100"></canvas>
-
     <% if (users.length === 0) { %>
       <p>No users found.</p>
     <% } else { %>
@@ -43,7 +41,6 @@
   </div>
 <script>
     const users = <%- JSON.stringify(users) %>;
-
 </script>
 <script src="/assets/script/view-users.js"></script>
 
