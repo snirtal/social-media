@@ -11,7 +11,7 @@
             --shadow-medium: rgba(0,0,0,0.5);
             --danger-color: #e74c3c;
             --danger-dark: #c0392b;
-            --like-color: #e0245e; /* New: Color for liked state */
+            --like-color: #e0245e; 
         }
 
         body {
@@ -59,8 +59,6 @@
         .group-header h1 {
             margin-bottom: 0.5rem;
         }
-
-        /* Action Buttons (Search, etc.) */
         .action-buttons {
             display: flex;
             justify-content: center;
@@ -91,8 +89,6 @@
             outline: none;
             box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.4);
         }
-
-        /* Create Post Section */
         .create-post-section {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
@@ -110,7 +106,6 @@
             color: var(--primary-color);
             font-weight: 600;
         }
-
         .create-post-section textarea {
             width: 100%;
             padding: 1rem;
