@@ -1,0 +1,53 @@
+        /* Define the custom colors using CSS custom properties */
+        :root {
+            --bg-dark: #0c0f14;
+            --bg-card: #161b22;
+            --bg-card-hover: #1f252e;
+            --border-color: #2b3139;
+            --text-color: #e0e0e0;
+            --text-light: #888;
+        }
+
+        /* Use @font-face to embed a custom font */
+        @font-face {
+            font-family: 'Inter';
+            font-style: normal;
+            font-weight: 400;
+            font-display: swap;
+            src: url('https://fonts.gstatic.com/s/inter/v13/UaBOO9Zvw6ll9QsmN-fD.woff2') format('woff2');
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-color);
+        }
+
+        /* Apply text-shadow to the main heading */
+        h1 {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* Use multiple columns for the main content section */
+        .multi-column-text {
+            column-count: 2;
+            column-gap: 2rem;
+            column-rule: 1px solid var(--border-color);
+        }
+
+        /* Apply border-radius to card elements */
+        .card {
+            border-radius: 0.75rem; /* Rounded corners */
+        }
+        
+        .card:hover {
+            background-color: var(--bg-card-hover);
+            transition: background-color 0.3s ease;
+        }
+
+        /* Use a media query to make the columns responsive on smaller screens */
+        @media (max-width: 768px) {
+            .multi-column-text {
+                column-count: 1;
+            }
+        }

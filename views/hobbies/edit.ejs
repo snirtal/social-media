@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Edit Hobby</title>
+</head>
+<body>
+  <div class="container">
+    <h1>Edit Hobby</h1>
+    <form id="editForm">
+      <label for="name">Name</label>
+      <input
+        type="text"
+        id="name"
+        name="name"
+        value="<%= hobby.name %>"
+        required
+      />
+
+      <label for="description">Description</label>
+      <textarea
+        id="description"
+        name="description"
+        rows="4"
+        required
+      ><%= hobby.description %></textarea>
+
+      <label for="practiceTime">Practice Time (hours)</label>
+      <input
+        type="number"
+        id="practiceTime"
+        name="practiceTime"
+        min="0"
+        value="<%= hobby.practiceTime %>"
+        required
+      />
+
+      <label for="maxParticipants">Max Participants</label>
+      <input
+        type="number"
+        id="maxParticipants"
+        name="maxParticipants"
+        min="1"
+        value="<%= hobby.maxParticipants %>"
+        required
+      />
+      <button type="submit">Update Hobby</button>
+    </form>
+    <div id="message" class="message"></div>
+    <a class="back-link" href="/hobbies/view">← Back to Hobby List</a>
+  </div>
+  <input type="hidden" id="id" value="<%=hobby._id%>"/>
+  <script  src="/assets/script/hobbyEdit.js" ></script>
+</body>
+    <%- include('../user/layout', { showFloatingRedirect: true }) %> 
+
+</html>
