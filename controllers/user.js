@@ -256,7 +256,7 @@ const updateUser = async (req, res) => {
 };
 
 const deleteUser = async (req, res) => {
-    if(req.session.user && req.session.isAdmin) {
+    if(req.session.user && req.session.user.isAdmin) {
     try {
         const user = await userService.deleteUser(req.params.id);
         if (!user) return res.status(404).json({ errors: ['User not found'] });
