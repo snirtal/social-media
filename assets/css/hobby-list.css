@@ -1,0 +1,248 @@
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: #161b22;
+            color: #333;
+            font-family: "Roboto Condensed", sans-serif;
+        }
+
+        header {
+            background: #161b22;
+            color: #4facfe;
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(255, 165, 0, 0.1); /* Corrected orange shadow */
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            letter-spacing: 1px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .hobby-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+        }
+
+        .hobby-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .hobby-name {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #4facfe;
+            margin: 0 0 8px 0;
+        }
+
+        .hobby-description {
+            margin: 0 0 10px 0;
+        }
+
+        .hobby-details {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .actions {
+            margin-top: 15px;
+        }
+
+        .actions form,
+        .actions a {
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .btn {
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            border: none; /* Ensure buttons have no default border */
+        }
+
+        .btn-edit {
+            background: #4facfe;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #2389ff;
+        }
+
+        .btn-delete {
+            background-color: #ff5f5f;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            display: flex; /* For centering 'X' */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn-delete:hover {
+            background: #e63b3b;
+        }
+
+        .action-buttons-container {
+            margin-bottom: 30px;
+            display: flex; /* Use flexbox for button alignment */
+            gap: 15px; /* Space between buttons */
+        }
+
+        .add-button, .search-button {
+            display: inline-block;
+            background: #4facfe;
+            color: black;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.2s ease, color 0.2s ease;
+            border: none; /* Ensure buttons have no default border */
+            cursor: pointer;
+        }
+
+        .add-button:hover, .search-button:hover {
+            background: black;
+            color: #4facfe;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6); /* Darker overlay */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: #161b22; /* Dark background for modal */
+            color: #ffffff; /* White text for modal */
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            position: relative;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid #4facfe; /* Accent border */
+        }
+
+        .modal-close-button {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #ff5f5f; /* Red close button */
+            transition: color 0.2s ease;
+        }
+
+        .modal-close-button:hover {
+            color: #e63b3b;
+        }
+
+        .modal-content h2 {
+            font-size: 1.8em;
+            color: #4facfe;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #c9d1d9; /* Light gray for labels */
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="number"] {
+            width: calc(100% - 20px); /* Account for padding */
+            padding: 10px;
+            border: 1px solid #30363d; /* Darker border */
+            border-radius: 5px;
+            background-color: #0d1117; /* Dark input background */
+            color: #c9d1d9; /* Light text in input */
+            font-size: 1em;
+        }
+
+        .form-group input[type="text"]::placeholder,
+        .form-group input[type="number"]::placeholder {
+            color: #6a737d; /* Placeholder color */
+        }
+
+        .search-results-container {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #30363d; /* Separator line */
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .search-results-container h3 {
+            color: #4facfe;
+            margin-bottom: 1rem;
+            font-size: 1.2em;
+        }
+
+        .search-result-card {
+            background: #21262d; /* Darker background for results */
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+            color: #c9d1d9;
+        }
+
+        .search-result-card .hobby-name {
+            color: #58a6ff; /* Lighter blue for result name */
+            font-size: 1.2em;
+        }
+
+        .search-result-card .hobby-details {
+            font-size: 0.85em;
+            color: #8b949e;
+        }
+
+        .no-results {
+            text-align: center;
+            color: #8b949e;
+            padding: 20px;
+        }
