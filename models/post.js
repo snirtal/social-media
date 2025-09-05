@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const Post = new Schema({
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  content: { type: String, required: true },
+  content: { type: String, required: false },
   created: { type: Date, default: Date.now },
   imagePath: {type: String, default: '', required: false},
   likes: [{
