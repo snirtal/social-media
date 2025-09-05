@@ -17,8 +17,10 @@ const updateUser = async (id, updateData) => {
 const deleteUser = async (id) => {
     const user = await getUserById(id);
     if (!user) return null;
-    return await user.deleteOne();
+    user.isDeleted = true;
+    return await user.save();
 };
+
 
 const getUsersByHobbyId = async (hobbyId) => {
     try {

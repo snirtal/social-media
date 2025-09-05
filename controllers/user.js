@@ -124,7 +124,7 @@ const userByAgeStatistics = async (req, res) => {
 const getUsersViewPage = async (req, res) => {
     if(req.session.user && req.session.user.isAdmin) {
     let users = await userService.getUsers();
-    res.render('user/view', { users }); }
+    res.render('user/view', {loggedUser: req.session.user, users: users }); }
     else {
     res.render('user/home')
     }
@@ -307,13 +307,21 @@ const searchUsers = async (req, res) => {
             _id: { $ne: currentUserId }
         };
 
-        if (name) {
-            query.$or = [
-                { firstName: { $regex: name, $options: 'i' } },
-                { lastName: { $regex: name, $options: 'i' } }
-            ];
+if (name) {
+    query.$or = [
+        { firstName: { $regex: name, $options: 'i' } },
+        { lastName: { $regex: name, $options: 'i' } },
+        {
+            $expr: {
+                $regexMatch: {
+                    input: { $concat: ["$firstName", " ", "$lastName"] },
+                    regex: name,
+                    options: "i"
+                }
+            }
         }
-
+    ];
+}
         if (ageMin || ageMax) {
             query.age = {};
             if (ageMin) {
@@ -353,8 +361,7 @@ const authenticateUser = async (req, res) => {
         const users = await userService.getUsers();
         const { email, password } = req.body;
 
-        // In a real application, you'd hash the password and compare it securely
-        let user = users.find(x => x.email.toLowerCase() === email.toLowerCase() && x.password === password); // Fix: compare x.password with password
+        let user = users.find(x => x.isDeleted == false && x.email.toLowerCase() === email.toLowerCase() && x.password === password); // Fix: compare x.password with password
 
         if (!user) {
             // It's better to render a login page with an error message or send JSON error

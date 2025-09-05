@@ -157,7 +157,10 @@
             const bio = document.getElementById('bio').value.trim(); // New field
             const gender = document.getElementById('gender').value; // New field
             const preferredCommunication = document.getElementById('preferredCommunication').value; // New field
-
+            if(!firstname || !lastname || !email || !phoneNumber || !age) {
+                alert('Please fill requried fields');
+                return;
+            }
             // Get location coordinates from hidden inputs
             const latitude = parseFloat(document.getElementById('latitude').value);
             const longitude = parseFloat(document.getElementById('longitude').value);

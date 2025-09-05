@@ -29,9 +29,11 @@
               <td><%= user.email %></td>
               <td>
                 <button class="delete-button" onclick="deleteUser('<%= user._id %>')">Delete</button>
+                <% if(loggedUser._id != user._id) { %>
                 <button class="admin-button" onclick="toggleAdmin('<%= user._id %>')">
                   <% if (user.isAdmin) { %>Remove Admin<% } else { %>Make Admin<% } %>
                 </button>
+                <%}%>
               </td>
             </tr>
           <% }); %>

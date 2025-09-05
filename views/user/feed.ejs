@@ -421,8 +421,9 @@
                 <li><a href="/users/feed">Home</a></li>
                                 <% if (user) { %>
                 <li><a href="/users/profile">My Profile</a></li>
-                <%}%>
                     <li><a href="/hobbies/view">Hobby Settings</a></li>
+                <%}%>
+
                 <% if (user && user.isAdmin) { %>
                     <li><a href="/users/view">Users Settings</a></li>
                 <% } %>

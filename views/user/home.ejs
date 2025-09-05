@@ -50,10 +50,11 @@
         <label for="password">Password</label>
         <input type="password"  name="password" required>
         <label for="phone">Phone Number</label>
-        <input type="phone"  name="phone" required>
-      </div>
+        <input type="phone"  name="phone"   required
+  pattern="^[0-9]{10}$" 
+  placeholder="e.g. 0501234567">      </div>
       <div class="modal-footer">
-        <button type="submit">Sign In</button>
+        <button type="submit">Sign Up</button>
       </div>
     </form>
   </div>
