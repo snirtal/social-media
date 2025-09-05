@@ -353,8 +353,7 @@ const authenticateUser = async (req, res) => {
         const users = await userService.getUsers();
         const { email, password } = req.body;
 
-        // In a real application, you'd hash the password and compare it securely
-        let user = users.find(x => x.email.toLowerCase() === email.toLowerCase() && x.password === password); // Fix: compare x.password with password
+        let user = users.find(x => x.isDeleted == false && x.email.toLowerCase() === email.toLowerCase() && x.password === password); // Fix: compare x.password with password
 
         if (!user) {
             // It's better to render a login page with an error message or send JSON error
