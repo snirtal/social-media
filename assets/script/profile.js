@@ -157,7 +157,7 @@
             const bio = document.getElementById('bio').value.trim(); // New field
             const gender = document.getElementById('gender').value; // New field
             const preferredCommunication = document.getElementById('preferredCommunication').value; // New field
-            if(!firstname || !lastname || !email || !phoneNumber || !age) {
+            if(!firstName || !lastName || !email || !phoneNumber || !age) {
                 alert('Please fill requried fields');
                 return;
             }
