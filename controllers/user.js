@@ -124,7 +124,7 @@ const userByAgeStatistics = async (req, res) => {
 const getUsersViewPage = async (req, res) => {
     if(req.session.user && req.session.user.isAdmin) {
     let users = await userService.getUsers();
-    res.render('user/view', { users }); }
+    res.render('user/view', {loggedUser: req.session.user, users: users }); }
     else {
     res.render('user/home')
     }
@@ -307,13 +307,21 @@ const searchUsers = async (req, res) => {
             _id: { $ne: currentUserId }
         };
 
-        if (name) {
-            query.$or = [
-                { firstName: { $regex: name, $options: 'i' } },
-                { lastName: { $regex: name, $options: 'i' } }
-            ];
+if (name) {
+    query.$or = [
+        { firstName: { $regex: name, $options: 'i' } },
+        { lastName: { $regex: name, $options: 'i' } },
+        {
+            $expr: {
+                $regexMatch: {
+                    input: { $concat: ["$firstName", " ", "$lastName"] },
+                    regex: name,
+                    options: "i"
+                }
+            }
         }
-
+    ];
+}
         if (ageMin || ageMax) {
             query.age = {};
             if (ageMin) {
