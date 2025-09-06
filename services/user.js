@@ -69,7 +69,7 @@ const usersByAge = async () => {
                 $sort: { age: 1 }
             }
         ]);
-        return data;
+        return data.filter(x=>x.isDeleted == false);
     } catch (error) {
         console.error("Error aggregating users by age:", error);
         throw error; // Re-throw to be handled by the calling route

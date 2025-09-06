@@ -124,6 +124,7 @@ const userByAgeStatistics = async (req, res) => {
 const getUsersViewPage = async (req, res) => {
     if(req.session.user && req.session.user.isAdmin) {
     let users = await userService.getUsers();
+    users = users.filter(x=>x.isDeleted == false)
     res.render('user/view', {loggedUser: req.session.user, users: users }); }
     else {
     res.render('user/home')
@@ -146,7 +147,7 @@ const toggleAdmin = async (req, res) => {
 const getUsers = async (req, res) => {
     try {
         let users = await userService.getUsers();
-        res.json(users);
+        res.json(users.filter(x=>x.isDeleted == false));
     } catch (error) {
         console.error('Error getting users:', error);
         res.status(500).json({ errors: ['Failed to retrieve users.', error.message] });
@@ -270,6 +271,19 @@ const deleteUser = async (req, res) => {
     }
 };
 
+const aboutSearch = async (req,res) => {
+
+    const today = new Date(req.body.from); 
+const lastWeek = new Date(req.body.to);
+
+lastWeek.setDate(today.getDate() - 7);
+   let usersWithSameGender  =  await  userService.searchUsersByGender(req.body.gender)
+    let lastWeekPosts = await postsService.searchPostsByDates(today,lastWeek)
+    let lastWeekHobbies = await hobbyService.searchHobbiesByDates(today,lastWeek)
+     res.json({lastWeekPosts: lastWeekPosts?.length, lastWeekHobbies: lastWeekHobbies?.length,usersWithSameGender: usersWithSameGender?.filter(x=>x.isDeleted == false).length });
+
+}
+
 const toggleHobby = async (req,res) => {
   let hobbyId = req.params.hobbyId;
   let userId = req.params.id
@@ -281,7 +295,7 @@ const toggleHobby = async (req,res) => {
     return res.status(500).json({ errors: ['Failed To Find Hobby'] }); 
 }
 const renderAboutPage = async (req,res) => {
-            res.render('user/about');
+     res.render('user/about');
 
 }
 const logout = (req, res) => {
@@ -349,7 +363,7 @@ if (name) {
         }
 
         const users = await userService.getUsers(query);
-        res.json(users);
+        res.json(users.filter(x=>x.isDeleted == false));
     } catch (error) {
         console.error('Error searching users:', error);
         res.status(500).json({ message: 'Error searching users', error: error.message });
