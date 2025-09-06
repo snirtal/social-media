@@ -281,7 +281,16 @@ const toggleHobby = async (req,res) => {
     return res.status(500).json({ errors: ['Failed To Find Hobby'] }); 
 }
 const renderAboutPage = async (req,res) => {
-            res.render('user/about');
+    const today = new Date(); 
+    const lastWeek = new Date();
+   lastWeek.setDate(today.getDate() - 7);
+    let usersWithSameGender = [];
+    if(req.session.user) {
+  usersWithSameGender =  await  userService.searchUsersByGender(req.session.user.gender)
+    }
+    let lastWeekPosts = await postsService.searchPostsByDates(today,lastWeek)
+    let lastWeekHobbies = await hobbyService.searchHobbiesByDates(today,lastWeek)
+     res.render('user/about', {lastWeekPosts: lastWeekPosts?.length, lastWeekHobbies: lastWeekHobbies?.length,usersWithSameGender: usersWithSameGender?.length });
 
 }
 const logout = (req, res) => {
@@ -428,3 +437,4 @@ module.exports = {
     logout,toggleHobby,
     renderAboutPage
 };
+
