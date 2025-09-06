@@ -42,6 +42,12 @@
     Since launching, our hobby social site has grown into a vibrant community of creators, learners, and doers. From virtual book clubs and art challenges to DIY tutorials and niche forums, we provide the tools and connections to help you explore what you love and meet like-minded people around the world.
 </p>
         </section>
+<section class="lg:col-span-4 p-8 bg-gray-800 card" style="background-color: var(--bg-card); border: 1px solid var(--border-color);">
+            <h2 class="text-3xl font-semibold mb-6">Site Data</h2>
+     <p>  <%=lastWeekPosts%> new posts were created this week!</p>
+<% if(usersWithSameGender != 0) { %> <p> You've <%=usersWithSameGender%> users with your same gender in our system</p> <%}%>
+<p>  <%=lastWeekHobbies%> new hobbies were created this week!</p>
+</section>
     </main>
     
     <!-- Footer -->
