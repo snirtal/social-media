@@ -270,6 +270,19 @@ const deleteUser = async (req, res) => {
     }
 };
 
+const aboutSearch = async (req,res) => {
+
+    const today = new Date(req.body.from); 
+const lastWeek = new Date(req.body.to);
+
+lastWeek.setDate(today.getDate() - 7);
+   let usersWithSameGender  =  await  userService.searchUsersByGender(req.body.gender)
+    let lastWeekPosts = await postsService.searchPostsByDates(today,lastWeek)
+    let lastWeekHobbies = await hobbyService.searchHobbiesByDates(today,lastWeek)
+     res.json({lastWeekPosts: lastWeekPosts?.length, lastWeekHobbies: lastWeekHobbies?.length,usersWithSameGender: usersWithSameGender?.length });
+
+}
+
 const toggleHobby = async (req,res) => {
   let hobbyId = req.params.hobbyId;
   let userId = req.params.id
@@ -435,6 +448,7 @@ module.exports = {
     toggleAdmin,
     toggleFriend,
     logout,toggleHobby,
-    renderAboutPage
+    renderAboutPage,
+    aboutSearch
 };
 

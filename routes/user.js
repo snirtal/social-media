@@ -18,6 +18,7 @@ router.post('/search', userController.searchUsers)
 router.post('/logout', userController.logout)
 router.get('/about', userController.renderAboutPage)
 router.post('/:id/hobby/:hobbyId',userController.toggleHobby);
+router.post('/about/search', userController.aboutSearch);
 
 router.route('/:id')
   .get(userController.getUser)
