@@ -1,3 +1,4 @@
+         /* Your existing CSS styles go here (unchanged from previous response) */
         :root {
             --bg-dark: #0c0f14;
             --bg-card: #161b22;
@@ -5,48 +6,58 @@
             --border-color: #2b3139;
             --text-color: #e0e0e0;
             --text-light: #888;
-            --primary-color: #00bcd4; 
-            --primary-dark: #0097a7; 
+            --primary-color: #00bcd4; /* Adapted from previous primary-color */
+            --primary-dark: #0097a7; /* Darker #00bcd4 */
             --shadow-light: rgba(0,0,0,0.4);
             --shadow-medium: rgba(0,0,0,0.5);
             --danger-color: #e74c3c;
             --danger-dark: #c0392b;
-            --like-color: #e0245e; 
+            --like-color: #e0245e; /* Color for liked state */
         }
 
         body {
             margin: 0;
-            background-color: var(--bg-dark);
+            background-color: var(--bg-dark); /* Changed to dark theme background */
             font-family: "Roboto Condensed", sans-serif;
             font-optical-sizing: auto;
-            color: var(--text-color); 
-            display: flex; 
-            min-height: 100vh;
+            color: var(--text-color); /* Default text color */
+            display: flex; /* For overall layout */
+            min-height: 100vh; /* Ensure full height */
         }
+
                 #temp {
-            position: fixed;
+            position: fixed; /* Keeps it relative to the nearest positioned ancestor (body in this case) */
+            bottom: 0;
             left: 0;
             background-color: #333;
             color: white;
             padding: 10px 15px;
             border-top-right-radius: 8px;
             font-size: 1.1em;
-            z-index: 1000; 
+            z-index: 1000; /* Ensure it's on top of other content */
         }
+        /* General button styles for add/remove friend, etc. */
         .add-friend-btn { background-color: var(--primary-color); color: var(--bg-dark); border: none; padding: 5px 10px; text-align: center; text-decoration: none; display: inline-block; font-size: 14px; margin-left: 10px; cursor: pointer; border-radius: 4px; transition: background-color 0.2s; }
         .remove-friend-btn { background-color: var(--danger-color); color: white; border: none; padding: 5px 10px; text-align: center; text-decoration: none; display: inline-block; font-size: 14px; margin-left: 10px; cursor: pointer; border-radius: 4px; transition: background-color 0.2s; }
         .add-friend-btn:hover { background-color: var(--primary-dark); }
         .remove-friend-btn:hover { background-color: var(--danger-dark); }
+
         .friend { display: flex; align-items: center; padding: 8px; border-bottom: 1px solid var(--border-color); /* Adjusted */ }
         .friend:last-child { border-bottom: none; }
         .friend img { border-radius: 50%; margin-right: 10px; width: 40px; height: 40px; }
         .friend span { flex-grow: 1; }
+
+        /* Main layout structure */
         .sidebar-left { width: 200px; background-color: black; box-sizing: border-box; padding: 20px 0; overflow-y: auto; }
         .main-content-area { flex: 1; display: flex; flex-direction: column; }
         .sidebar-right { width: 250px; background-color: black; box-sizing: border-box; padding: 20px 0; overflow-y: auto; }
+
+        /* Video banner and title */
         .video-banner { height: 400px; border-bottom: 1px solid var(--border-color); position: relative; box-sizing: border-box; overflow: hidden;}
         .video-banner video { width: 100%; height: 100%; object-fit: cover; background-color: black; }
         .title { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: bold; color: white; font-size: 50px; font-style: italic; letter-spacing: 10px; box-shadow: 14px 8px 0px 0px white; white-space: nowrap; }
+
+        /* Create Post Section - Integrated from Hobby Page */
         .create-post-section {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
@@ -272,6 +283,7 @@
             color: var(--primary-color);
         }
 
+        /* Delete Post Icon Styles */
         .delete-post-icon {
             position: absolute;
             top: 1rem;
@@ -289,6 +301,7 @@
             transform: scale(1.1);
         }
 
+        /* Like Section Styles */
         .post-likes {
             display: flex;
             align-items: center;
@@ -324,11 +337,13 @@
             margin-top: 1.5rem;
         }
 
+        /* Sidebar styles */
         .menu h2 { font-size: 1.2rem; margin-bottom: 15px; color: white; text-align: center; border-bottom: 1px solid var(--border-color); padding-bottom: 5px; }
         .menu ul { list-style: none; padding: 0; margin: 0; }
         .menu ul li { margin-bottom: 15px; }
         .menu ul li a { text-align: center; text-decoration: none; color: white; font-weight: 500; font-size: 1rem; display: block; padding: 8px 12px; border-radius: 6px; transition: background-color 0.2s; }
         .menu ul li a:hover { background-color: var(--primary-color); color: var(--bg-dark); }
+
         .friends-suggestions h2 { font-size: 1.2rem; text-align: center; margin-bottom: 15px; color: var(--primary-color); border-bottom: 1px solid var(--border-color); padding-bottom: 5px; }
         .friend { display: flex;  align-items: center; margin-bottom: 15px; margin-left: 10px; padding: 8px; width: calc(100% - 40px); /* Adjusted width */ background: #161b22; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); transition: transform 0.2s ease; }
         .friend:hover { transform: scale(1.02); }
@@ -336,11 +351,14 @@
         .friend-info .name { font-weight: bold; font-size: 0.95rem; margin-bottom: 4px; color: var(--primary-color); }
         .add-btn { padding: 4px 10px; background-color: var(--primary-color); color: var(--bg-dark); border: none; border-radius: 4px; font-size: 0.75rem; cursor: pointer; transition: background-color 0.2s; }
         .add-btn:hover { background-color: var(--primary-dark); }
+
+        /* Filter Modal Styles (existing, but moved inside the style tag) */
         .filter-section { padding: 15px 10px; margin-bottom: 15px; }
         .filter-section input, .filter-section select { width: calc(100% - 20px); padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; background-color: #f9f9f9; box-sizing: border-box; }
         .filter-section button { width: 100%; padding: 10px; background-color: var(--primary-color); color: black; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; transition: background-color 0.2s; }
         .filter-section button:hover { background-color: var(--primary-dark); }
         .filter-section label { display: block; margin-bottom: 5px; font-size: 0.9rem; color: white; }
+
         .modal-overlay { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); justify-content: center; align-items: center; }
         .modal-content { background-color: #1f1f1f; margin: auto; padding: 20px; border: 1px solid #888; width: 90%; max-width: 400px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); position: relative; }
         .modal-content h2 { text-align: center; margin-top: 0; margin-bottom: 20px; font-size: 1.4rem; color: var(--primary-color); }
@@ -350,6 +368,7 @@
         .filter-users-button-container button { padding: 10px 20px; background-color: var(--primary-color); color: black; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; transition: background-color 0.2s; }
         .filter-users-button-container button:hover { background-color: var(--primary-dark); }
 
+        /* Responsive adjustments */
         @media (max-width: 768px) {
             body { flex-direction: column; }
             .sidebar-left, .sidebar-right { width: 100%; padding: 10px 0; }
@@ -377,7 +396,13 @@
             .modal-content h2 { font-size: 1.2rem; }
             .modal-close-button { font-size: 24px; top: 8px; right: 15px; }
         }
-   .edit-post-icon {
+
+
+
+          /* You can add these to your existing group.css or a new feed.css */
+
+/* Styles for the edit icon */
+.edit-post-icon {
     cursor: pointer;
     font-size: 1rem;
     color: #888;
@@ -386,37 +411,39 @@
     right: 3rem;
     top: 23px;
 }
+
 .edit-post-icon:hover {
     color: #0056b3;
 }
+
 .post-edit-textarea {
     border: 1px solid var(--primary-color);
     border-radius: 6px;
     padding: 0.5rem;
-    background-color: #1a2027;
+    background-color: #1a2027; /* Darker background for editable area */
 }
 
 .post-edit-textarea {
     width: 100%;
-    min-height: 80px; 
+    min-height: 80px; /* Adjust as needed */
     padding: 0.5rem;
     box-sizing: border-box;
     border: none;
     background: transparent;
     color: var(--text-color);
-    font-family: inherit; 
-    font-size: inherit; 
+    font-family: inherit; /* Inherit font from body */
+    font-size: inherit; /* Inherit font size from parent */
     resize: vertical;
-    outline: none; 
+    outline: none; /* Remove default textarea outline */
 }
 
 
 .edit-actions {
-    display: flex; 
-    justify-content: flex-end;
-    gap: 10px; 
+    display: flex; /* Use flexbox to align buttons */
+    justify-content: flex-end; /* Align buttons to the right */
+    gap: 10px; /* Space between buttons */
     margin-top: 10px;
-    padding-top: 10px; 
+    padding-top: 10px; /* Add some padding above buttons */
     margin-right: 15px;
 }
 .edit-actions button {
