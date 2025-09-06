@@ -13,6 +13,25 @@ const getHobbyById = async (id) =>
       populate: { path: 'user' }
     });
 
+
+const searchHobbiesByDates = async (from, to) => {
+  try {
+    const fromDate = new Date(from);
+    const toDate = new Date(to);
+
+    const hobbies = await Hobby.find({
+      created: {
+        $gte: fromDate,
+        $lte: toDate
+      }
+    })
+    return hobbies;
+  } catch (err) {
+    console.error("Error searching hobbies by dates:", err);
+    throw err;
+  }
+};
+
 const getHobbies = async () => await Hobby.find({});
 const postsPerHobby = async () => {
     return await Hobby.aggregate([
@@ -135,5 +154,6 @@ module.exports = {
   updateHobby,
   deleteHobby,
   postsPerHobby,
-  searchHobbies
+  searchHobbies,
+  searchHobbiesByDates
 };

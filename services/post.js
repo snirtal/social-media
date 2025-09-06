@@ -24,6 +24,25 @@ const createHobbyPost = async (userId, content, hobbyId,reqfile) => {
   }
 }
 
+
+const searchPostsByDates = async (from, to) => {
+  try {
+    const fromDate = new Date(from);
+    const toDate = new Date(to);
+
+    const posts = await Post.find({
+      created: {
+        $gte: fromDate,
+        $lte: toDate
+      }
+    })
+    return posts;
+  } catch (err) {
+    console.error("Error searching posts by dates:", err);
+    throw err;
+  }
+};
+
 const getPostById = async (id) => await Post.findById(id).populate('user');
 
 const toggleLike = async (postId, userId) => {
@@ -127,4 +146,4 @@ const deletePost = async (id) => {
   return await post.deleteOne();
 };
 
-module.exports = { createPost, getPostById, getPosts, updatePost, deletePost,createHobbyPost,getHobbyPosts,toggleLike };
+module.exports = { createPost,searchPostsByDates, getPostById, getPosts, updatePost, deletePost,createHobbyPost,getHobbyPosts,toggleLike };
