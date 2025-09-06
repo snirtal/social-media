@@ -1,4 +1,5 @@
 const Hobby = require('../models/hobby');
+const User = require('../models/user')
 
 const createHobby = async (name, description, practiceTime, maxParticipants,createdBy) => {
   const hobby = new Hobby({ name, description, practiceTime, maxParticipants, createdBy });
@@ -72,12 +73,20 @@ const searchHobbies = async (filters) => {
             }
         }
 
-        // If searching by createdByUserName, first find the user IDs
         if (filters.createdByUserName) {
             const users = await User.find({
                 $or: [
                     { firstName: { $regex: filters.createdByUserName, $options: 'i' } },
-                    { lastName: { $regex: filters.createdByUserName, $options: 'i' } }
+                    { lastName: { $regex: filters.createdByUserName, $options: 'i' } },
+                            {
+            $expr: {
+                $regexMatch: {
+                    input: { $concat: ["$firstName", " ", "$lastName"] },
+                    regex: filters.createdByUserName,
+                    options: "i"
+                }
+            }
+        }
                 ]
             }).select('_id'); // Only select the IDs
 
