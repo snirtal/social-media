@@ -92,6 +92,17 @@ const showGroupPage = async (req, res) => {
 
   }
 }
+const aboutSearch = async (req,res) => {
+
+    const today = new Date(req.body.from); 
+const lastWeek = new Date(req.body.to);
+
+lastWeek.setDate(today.getDate() - 7);
+    let lastWeekHobbies = await hobbyService.searchHobbiesByDates(today,lastWeek)
+     res.json({lastWeekHobbies: lastWeekHobbies?.length});
+
+}
+
 
 const getHobby = async (req, res) => {
   const hobby = await hobbyService.getHobbyById(req.params.id);
@@ -127,5 +138,6 @@ module.exports = {
   showGroupPage,
   postsPerHobby,
   getEditPage,
-  searchHobbies
+  searchHobbies,
+  aboutSearch
 };

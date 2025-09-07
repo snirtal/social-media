@@ -355,10 +355,10 @@ imageUploadInput.addEventListener('change', function () {
 
     async function saveEditedPost(postId, postContentP, textarea, editActionsDiv, postDiv) {
         const newContent = textarea.value.trim();
-        if (newContent === '') {
-            alert('Post content cannot be empty!');
-            return;
-        }
+        // if (newContent === '') {
+        //     alert('Post content cannot be empty!');
+        //     return;
+        // }
 
         try {
             const response = await fetch(`/posts/${postId}`, { 

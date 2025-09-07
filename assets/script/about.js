@@ -1,68 +1,135 @@
-      const searchButton = document.getElementById('searchButton');
-        const searchDialog = document.getElementById('searchDialog');
-        const cancelButton = document.getElementById('cancelButton');
-        const searchForm = document.getElementById('searchForm');
-        const statsResults = document.getElementById('stats-results');
+const postsButton = document.getElementById('postsButton');
+const usersButton = document.getElementById('usersButton');
+const hobbiesButton = document.getElementById('hobbiesButton');
 
-        // Show the dialog when the search button is clicked
-        searchButton.addEventListener('click', () => {
-            searchDialog.classList.remove('hidden');
+const postsDialog = document.getElementById('postsDialog');
+const usersDialog = document.getElementById('usersDialog');
+const hobbiesDialog = document.getElementById('hobbiesDialog');
+
+const postsForm = document.getElementById('postsForm');
+const usersForm = document.getElementById('usersForm');
+const hobbiesForm = document.getElementById('hobbiesForm');
+
+const statsResults = document.getElementById('stats-results');
+
+// Helper function to show a specific dialog
+const showDialog = (dialog) => {
+    dialog.classList.remove('hidden');
+};
+
+// Helper function to hide all dialogs
+const hideAllDialogs = () => {
+    postsDialog.classList.add('hidden');
+    usersDialog.classList.add('hidden');
+    hobbiesDialog.classList.add('hidden');
+};
+
+// Add event listeners to the search buttons
+postsButton.addEventListener('click', () => {
+    showDialog(postsDialog);
+});
+
+usersButton.addEventListener('click', () => {
+    showDialog(usersDialog);
+});
+
+hobbiesButton.addEventListener('click', () => {
+    showDialog(hobbiesDialog);
+});
+
+// Add event listeners to the cancel buttons
+document.querySelectorAll('.cancelButton').forEach(button => {
+    button.addEventListener('click', () => {
+        hideAllDialogs();
+    });
+});
+
+// Handle posts form submission
+postsForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(postsForm);
+    const data = Object.fromEntries(formData.entries());
+
+    statsResults.innerHTML = '<p class="text-center text-blue-400 animate-pulse">Fetching posts data...</p>';
+
+    try {
+        const response = await fetch('http://localhost:3000/posts/about/search', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
         });
 
-        // Hide the dialog when the cancel button is clicked
-        cancelButton.addEventListener('click', () => {
-            searchDialog.classList.add('hidden');
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const result = await response.json();
+        statsResults.innerHTML = `<p class="text-lg leading-relaxed"><strong>${result.lastWeekPosts}</strong> new posts were created within your date range!</p>`;
+
+    } catch (error) {
+        console.error('Error:', error);
+        statsResults.innerHTML = '<p class="text-center text-red-400">Failed to fetch posts data. Please try again.</p>';
+    } finally {
+        hideAllDialogs();
+    }
+});
+
+// Handle users form submission
+usersForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(usersForm);
+    const data = Object.fromEntries(formData.entries());
+
+    statsResults.innerHTML = '<p class="text-center text-blue-400 animate-pulse">Fetching users data...</p>';
+
+    try {
+        const response = await fetch('http://localhost:3000/users/about/search', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
         });
 
-        // Handle form submission
-        searchForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
 
-            // Collect form data
-            const formData = new FormData(searchForm);
-            const data = Object.fromEntries(formData.entries());
+        const result = await response.json();
+        statsResults.innerHTML = `<p class="text-lg leading-relaxed">There are <strong>${result.usersWithSameGender}</strong> users with the same gender as you in our system!</p>`;
 
-            // Show a loading message
-            statsResults.innerHTML = '<p class="text-center text-blue-400 animate-pulse">Fetching data...</p>';
-            
-            try {
-                // Send data to the server
-                const response = await fetch('http://localhost:3000/users/about/search', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data),
-                });
+    } catch (error) {
+        console.error('Error:', error);
+        statsResults.innerHTML = '<p class="text-center text-red-400">Failed to fetch users data. Please try again.</p>';
+    } finally {
+        hideAllDialogs();
+    }
+});
 
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
+// Handle hobbies form submission
+hobbiesForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(hobbiesForm);
+    const data = Object.fromEntries(formData.entries());
 
-                const result = await response.json();
+    statsResults.innerHTML = '<p class="text-center text-blue-400 animate-pulse">Fetching hobbies data...</p>';
 
-                // Update the UI with the fetched data
-                let resultHtml = `
-                    <p class="text-lg leading-relaxed"><strong>${result.lastWeekPosts}</strong> new posts were created within your date range!</p>
-                    <p class="text-lg leading-relaxed">There are <strong>${result.usersWithSameGender}</strong> users with the same gender as you in our system!</p>
-                    <p class="text-lg leading-relaxed"><strong>${result.lastWeekHobbies}</strong> new hobbies were created within your date range!</p>
-                `;
-
-                if (result.usersWithSameGender === 0) {
-                    resultHtml = `
-                        <p class="text-lg leading-relaxed"><strong>${result.lastWeekPosts}</strong> new posts were created within your date range!</p>
-                        <p class="text-lg leading-relaxed">You have 0 users with your same gender in our system.</p>
-                        <p class="text-lg leading-relaxed"><strong>${result.lastWeekHobbies}</strong> new hobbies were created within your date range!</p>
-                    `;
-                }
-
-                statsResults.innerHTML = resultHtml;
-
-            } catch (error) {
-                console.error('Error:', error);
-                statsResults.innerHTML = '<p class="text-center text-red-400">Failed to fetch data. Please try again.</p>';
-            } finally {
-                // Hide the dialog after the fetch is complete
-                searchDialog.classList.add('hidden');
-            }
+    try {
+        const response = await fetch('http://localhost:3000/hobbies/about/search', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
         });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const result = await response.json();
+        statsResults.innerHTML = `<p class="text-lg leading-relaxed"><strong>${result.lastWeekHobbies}</strong> new hobbies were created within your date range!</p>`;
+
+    } catch (error) {
+        console.error('Error:', error);
+        statsResults.innerHTML = '<p class="text-center text-red-400">Failed to fetch hobbies data. Please try again.</p>';
+    } finally {
+        hideAllDialogs();
+    }
+});

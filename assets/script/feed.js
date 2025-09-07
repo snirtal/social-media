@@ -471,10 +471,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const postId = postElement.dataset.postId;
             const newContent = textarea.value.trim();
 
-            if (!newContent) {
-                alert('Post content cannot be empty!');
-                return;
-            }
+            // if (!newContent) {
+            //     alert('Post content cannot be empty!');
+            //     return;
+            // }
 
             try {
                 const response = await fetch(`/posts/${postId}`, { // Assuming your API endpoint for updating a post is PUT /posts/:id
