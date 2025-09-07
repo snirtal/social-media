@@ -79,7 +79,7 @@ const showGroupPage = async (req, res) => {
       }
      let usersByHobby = await userService.getUsersByHobbyId(hobbyId);
      let users = await userService.getUsers();
-     let usersNotInHobby = users.filter(x=> usersByHobby.some(y => y._id.toString() == x._id.toString()) == false);
+     let usersNotInHobby = users.filter(x=>x.isDeleted == false).filter(x=> usersByHobby.some(y => y._id.toString() == x._id.toString()) == false);
      let isHobbyOwner = hobby.createdBy ? req.session.user._id.toString() == hobby.createdBy.toString() : false;
       res.render('hobbies/group', { hobby: hobby, user: req.session.user, isHobbyOwner, usersByHobby, usersNotInHobby });
     })
@@ -92,6 +92,17 @@ const showGroupPage = async (req, res) => {
 
   }
 }
+const aboutSearch = async (req,res) => {
+
+    const today = new Date(req.body.from); 
+const lastWeek = new Date(req.body.to);
+
+lastWeek.setDate(today.getDate() - 7);
+    let lastWeekHobbies = await hobbyService.searchHobbiesByDates(today,lastWeek)
+     res.json({lastWeekHobbies: lastWeekHobbies?.length});
+
+}
+
 
 const getHobby = async (req, res) => {
   const hobby = await hobbyService.getHobbyById(req.params.id);
@@ -127,5 +138,6 @@ module.exports = {
   showGroupPage,
   postsPerHobby,
   getEditPage,
-  searchHobbies
+  searchHobbies,
+  aboutSearch
 };

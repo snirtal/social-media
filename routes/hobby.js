@@ -16,6 +16,7 @@ router.route('/:id')
   .get(hobbyController.getHobby)
   .patch(hobbyController.updateHobby)
   .delete(hobbyController.deleteHobby);
+router.post('/about/search', hobbyController.aboutSearch);
 
   router.route('/search').post(hobbyController.searchHobbies)
 
