@@ -59,7 +59,9 @@ const usersByAge = async () => {
             {
                 // Match documents where 'age' exists and is a positive number
                 $match: {
-                    age: { $exists: true, $ne: null, $gt: 0 } // Ensure age is present and positive
+                    age: { $exists: true, $ne: null, $gt: 0 },
+                    isDeleted: false 
+
                 }
             },
             {
@@ -82,7 +84,7 @@ const usersByAge = async () => {
                 $sort: { age: 1 }
             }
         ]);
-        return data.filter(x=>x.isDeleted == false);
+        return data;
     } catch (error) {
         console.error("Error aggregating users by age:", error);
         throw error; // Re-throw to be handled by the calling route
