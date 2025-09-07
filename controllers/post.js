@@ -5,58 +5,17 @@ const axios = require('axios');
 const fs = require('fs').promises; // Import the promises-based fs module
 const path = require('path');
 
-// IMPORTANT: Never hardcode sensitive information like this in a real application.
-// Use environment variables instead.
 const FACEBOOK_PAGE_ID = '822706394248558';
 const FACEBOOK_ACCESS_TOKEN = 'EAAUeK8KSZCGkBPRdxw5tneWAyoGXHkTNVRTdstR1MZBOWzWUKvHdAK99BokbmKS5RT8lyPkS4Ii2Dyv6Yx9mM07C9Jvhm4TXKMPwfDVubOxrtRiNzoee5FhRG34S4NDDsoD2TrGa6MJLZCbuuJZAKZCdMNA42twoku1w6HEKwpKEiFi1DJao4q3x7FiPZBXWE0TWZAQ87ZBo';
 
-// Imgur Client ID for API calls. Get one from your Imgur account.
-// This should also be an environment variable.
-const IMGUR_CLIENT_ID = 'YOUR_IMGUR_CLIENT_ID_HERE';
 
-async function uploadImageToImgur(filePath) {
-  try {
-    const imageData = await fs.readFile(filePath);
-    const base64Image = imageData.toString('base64');
-
-    const response = await axios.post(
-      'https://api.imgur.com/3/upload',
-      {
-        image: base64Image,
-        type: 'base64',
-      },
-      {
-        headers: {
-          Authorization: `Client-ID ${IMGUR_CLIENT_ID}`,
-        },
-      }
-    );
-
-    return response.data.data.link;
-  } catch (error) {
-    console.error('Error uploading image to Imgur:', error.response ? error.response.data : error.message);
-    return null;
-  }
-}
-
-// Function to share the post to Facebook
-async function sharePostToFacebook(content, imageUrl) {
+async function sharePostToFacebook(content) {
   try {
     let endpoint = `https://graph.facebook.com/v19.0/${FACEBOOK_PAGE_ID}/feed`;
     let postData = {
       message: content,
       access_token: FACEBOOK_ACCESS_TOKEN
     };
-
-    // If a public image URL is present, change the endpoint and include the image URL
-    if (imageUrl) {
-      endpoint = `https://graph.facebook.com/v19.0/${FACEBOOK_PAGE_ID}/photos`;
-      postData = {
-        url: imageUrl, // This URL must be publicly accessible
-        message: content,
-        access_token: FACEBOOK_ACCESS_TOKEN
-      };
-    }
 
     const response = await axios.post(endpoint, postData);
     console.log('Post successfully shared to Facebook:', response.data);
@@ -68,21 +27,9 @@ async function sharePostToFacebook(content, imageUrl) {
 const createPost = async (req, res) => {
   const { content } = req.body;
   const userId = req.session.user._id;
-  
-  // Use a variable to hold the final, public URL for the image
-  let publicImageUrl = '';
-  
-  // Check if a file was uploaded
-  if (req.file) {
-    // Upload the image to Imgur and get the public URL
-    publicImageUrl = await uploadImageToImgur(req.file.path);
-  }
-  const imageFile = publicImageUrl;
-  
   let post = await postService.createPost(userId, content, req.file.path);
   
-  // Automatically share the new post to Facebook
-  await sharePostToFacebook(content, imageFile);
+  await sharePostToFacebook(content);
   
   res.json(post);
 };
@@ -121,17 +68,6 @@ const createHobbyPost = async (req, res) => {
   if (req.session.user) {
     const { content, hobbyId } = req.body;
     const userId = req.session.user._id;
-
-    // Use a variable to hold the final, public URL for the image
-    let publicImageUrl = '';
-    
-    // Check if a file was uploaded
-    if (req.file) {
-      // Upload the image to Imgur and get the public URL
-      publicImageUrl = await uploadImageToImgur(req.file.path);
-    }
-    const imageFile = publicImageUrl;
-
     try {
       const post = await postService.createHobbyPost(userId, content, hobbyId, req.file.path);
 
@@ -140,7 +76,7 @@ const createHobbyPost = async (req, res) => {
       }
 
       // Automatically share the new post to Facebook
-      await sharePostToFacebook(content, imageFile);
+      await sharePostToFacebook(content);
 
       const hobby = await hobbyService.getHobbyById(hobbyId);
 
