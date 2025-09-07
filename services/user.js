@@ -22,6 +22,19 @@ const deleteUser = async (id) => {
 };
 
 
+const searchUsersByGender = async (gender) => {
+  try {
+    if (!gender) return [];
+
+    const users = await User.find({ gender })
+
+    return users;
+  } catch (err) {
+    console.error("Error searching users by gender:", err);
+    throw err;
+  }
+};
+
 const getUsersByHobbyId = async (hobbyId) => {
     try {
         const users = await User.find({ hobbies: hobbyId })
@@ -120,4 +133,4 @@ const toggleFriend = async (userId, friendId) => {
     return user.populate('friends');
 };
 
-module.exports = { createUser, toggleHobby, getUserById, getUsers, updateUser, deleteUser, toggleAdmin, toggleFriend, usersByAge, getUsersByHobbyId };
+module.exports = { createUser,searchUsersByGender, toggleHobby, getUserById, getUsers, updateUser, deleteUser, toggleAdmin, toggleFriend, usersByAge, getUsersByHobbyId };

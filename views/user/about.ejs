@@ -6,48 +6,138 @@
     <title>About Us</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/assets/css/about.css">
+    <link rel="stylesheet" href="/assets/css/about.css"/>
 
+    <style>
+
+    </style>
 </head>
 <body class="p-8 md:p-12">
 
-    <!-- Header -->
     <header class="text-center py-6 mb-8 border-b-2 border-dashed" style="border-color: var(--border-color);">
         <h1 class="text-5xl font-bold" style="color: var(--text-color);">About Our Company</h1>
     </header>
 
-    <!-- Navigation -->
     <nav class="flex justify-center mb-12">
         <ul class="flex space-x-6 text-lg" style="color: var(--text-light);">
             <li><a href="feed" class="hover:underline">Home</a></li>
         </ul>
     </nav>
 
-    <!-- Main Content Section -->
     <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- Aside (Sidebar) -->
         <aside class="lg:col-span-1 p-6 bg-gray-800 card" style="background-color: var(--bg-card); border: 1px solid var(--border-color);">
             <h2 class="text-3xl font-semibold mb-4">Our Mission</h2>
-<p class="text-base leading-relaxed" style="color: var(--text-light);">
-    Our mission is to connect people through shared passions and hobbies. Whether you're into painting, gaming, photography, or gardening, our platform offers a space where enthusiasts can collaborate, learn, and grow together. We believe that hobbies build community, spark creativity, and enrich lives.
-</p>
+            <p class="text-base leading-relaxed" style="color: var(--text-light);">
+                Our mission is to connect people through shared passions and hobbies. Whether you're into painting, gaming, photography, or gardening, our platform offers a space where enthusiasts can collaborate, learn, and grow together. We believe that hobbies build community, spark creativity, and enrich lives.
+            </p>
         </aside>
 
-        <!-- Main Section with multi-column text -->
         <section class="lg:col-span-2 p-6 bg-gray-800 card" style="background-color: var(--bg-card); border: 1px solid var(--border-color);">
             <h2 class="text-3xl font-semibold mb-6">Our Story</h2>
-<p class="multi-column-text text-base text-justify leading-relaxed" style="color: var(--text-light);">
-    Our journey began with a simple idea: create a digital space where people can meet others who share their interests. In a world dominated by fast-paced social media, we wanted to build a calmer, more meaningful experience: a place where conversations revolve around hobbies and personal growth.
-    <br><br>
-    Since launching, our hobby social site has grown into a vibrant community of creators, learners, and doers. From virtual book clubs and art challenges to DIY tutorials and niche forums, we provide the tools and connections to help you explore what you love and meet like-minded people around the world.
-</p>
+            <p class="multi-column-text text-base text-justify leading-relaxed" style="color: var(--text-light);">
+                Our journey began with a simple idea: create a digital space where people can meet others who share their interests. In a world dominated by fast-paced social media, we wanted to build a calmer, more meaningful experience — a place where conversations revolve around hobbies and personal growth.
+                <br><br>
+                Since launching, our hobby social site has grown into a vibrant community of creators, learners, and doers. From virtual book clubs and art challenges to DIY tutorials and niche forums, we provide the tools and connections to help you explore what you love and meet like-minded people around the world.
+            </p>
+        </section>
+
+        <section class="lg:col-span-4 p-8 bg-gray-800 card" style="background-color: var(--bg-card); border: 1px solid var(--border-color);">
+            <h2 class="text-3xl font-semibold mb-6">Site Data</h2>
+            <div id="stats-results" class="text-lg space-y-2">
+                <p>Click a button to get the latest site statistics.</p>
+            </div>
+            <div class="mt-6 flex justify-center space-x-4">
+                <button id="postsButton" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition duration-300 ease-in-out transform hover:scale-105 shadow-lg">
+                    Search Posts
+                </button>
+                <button id="usersButton" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition duration-300 ease-in-out transform hover:scale-105 shadow-lg">
+                    Search Users
+                </button>
+                <button id="hobbiesButton" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition duration-300 ease-in-out transform hover:scale-105 shadow-lg">
+                    Search Hobbies
+                </button>
+            </div>
         </section>
     </main>
     
-    <!-- Footer -->
     <footer class="text-center py-6 mt-12 text-sm" style="color: var(--text-light);">
         <p>&copy; 2024 Your Company. All rights reserved.</p>
     </footer>
 
+    <div id="postsDialog" class="hidden fixed inset-0 flex items-center justify-center bg-black/75 z-50">
+        <div class="bg-gray-800 p-8 rounded-2xl shadow-xl w-full max-w-lg mx-4">
+            <h2 class="text-2xl font-bold mb-6 text-center">Search Posts</h2>
+            <form id="postsForm" class="space-y-6">
+                <div>
+                    <label for="postsFromDate" class="block text-sm font-medium mb-1">From Date</label>
+                    <input type="date" id="postsFromDate" name="from" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label for="postsToDate" class="block text-sm font-medium mb-1">To Date</label>
+                    <input type="date" id="postsToDate" name="to" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="flex justify-end space-x-4 pt-4">
+                    <button type="button" class="cancelButton bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out">
+                        Cancel
+                    </button>
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out">
+                        Submit
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="usersDialog" class="hidden fixed inset-0 flex items-center justify-center bg-black/75 z-50">
+        <div class="bg-gray-800 p-8 rounded-2xl shadow-xl w-full max-w-lg mx-4">
+            <h2 class="text-2xl font-bold mb-6 text-center">Search Users</h2>
+            <form id="usersForm" class="space-y-6">
+                <div>
+                    <label for="gender" class="block text-sm font-medium mb-1">Gender</label>
+                    <select id="gender" name="gender" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                        <option value="Prefer not to say">Prefer not to say</option>
+                    </select>
+                </div>
+                <div class="flex justify-end space-x-4 pt-4">
+                    <button type="button" class="cancelButton bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out">
+                        Cancel
+                    </button>
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out">
+                        Submit
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="hobbiesDialog" class="hidden fixed inset-0 flex items-center justify-center bg-black/75 z-50">
+        <div class="bg-gray-800 p-8 rounded-2xl shadow-xl w-full max-w-lg mx-4">
+            <h2 class="text-2xl font-bold mb-6 text-center">Search Hobbies</h2>
+            <form id="hobbiesForm" class="space-y-6">
+                <div>
+                    <label for="hobbiesFromDate" class="block text-sm font-medium mb-1">From Date</label>
+                    <input type="date" id="hobbiesFromDate" name="from" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label for="hobbiesToDate" class="block text-sm font-medium mb-1">To Date</label>
+                    <input type="date" id="hobbiesToDate" name="to" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="flex justify-end space-x-4 pt-4">
+                    <button type="button" class="cancelButton bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out">
+                        Cancel
+                    </button>
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out">
+                        Submit
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+<script src="/assets/script/about.js"></script>
 </body>
 </html>

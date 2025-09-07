@@ -1,12 +1,4 @@
-        /* Define the custom colors using CSS custom properties */
-        :root {
-            --bg-dark: #0c0f14;
-            --bg-card: #161b22;
-            --bg-card-hover: #1f252e;
-            --border-color: #2b3139;
-            --text-color: #e0e0e0;
-            --text-light: #888;
-        }
+
 
         /* Use @font-face to embed a custom font */
         @font-face {
@@ -49,5 +41,32 @@
         @media (max-width: 768px) {
             .multi-column-text {
                 column-count: 1;
+            }
+        }
+
+
+                :root {
+            --bg-color: #1a202c; /* Dark gray */
+            --bg-card: #2d3748; /* Darker gray */
+            --text-color: #f7fafc; /* White */
+            --text-light: #a0aec0; /* Lighter gray */
+            --accent-color: #4299e1; /* Blue */
+            --border-color: #4a5568; /* Even darker gray */
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+        }
+        .card {
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .multi-column-text {
+            column-count: 1;
+        }
+        @media (min-width: 768px) {
+            .multi-column-text {
+                column-count: 2;
             }
         }
