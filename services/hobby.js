@@ -10,8 +10,10 @@ const getHobbyById = async (id) =>
   await Hobby.findById(id)
     .populate({
       path: 'posts',
+      options: { sort: { created: -1 } },  
       populate: { path: 'user' }
     });
+
 
 
 const searchHobbiesByDates = async (from, to) => {
