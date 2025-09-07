@@ -108,7 +108,7 @@ const showFeedPage = async (req, res) => {
     if (req.session.user) {
         res.render('user/feed', { user: req.session.user, allPosts: posts });
     } else {
-        res.render('user/feed', { user: null, allPosts: posts });
+        res.render('user/home');
     }
 };
 

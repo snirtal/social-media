@@ -8,7 +8,7 @@ const path = require('path');
 // IMPORTANT: Never hardcode sensitive information like this in a real application.
 // Use environment variables instead.
 const FACEBOOK_PAGE_ID = '822706394248558';
-const FACEBOOK_ACCESS_TOKEN = 'EAAUeK8KSZCGkBPSE1uKEtw2M25KRXDltqW4a0hk9B5W9bwgltXmbq3YoyaCSsfNzssiGo8n9QtevQ4769PGOAqMp8oH2QJN2NFYqLNnpspWrKBZAZBjdZC9Agq3hfNQmUy460MyuhITXTF6ZBMwp1a0R4xPEfDzL3GSK2l8FCZCa3i1fSznwALjSUXyoGmlmXC7mrIgJnN8wEnVZAOQy0cs4OsTcqbS2qipLWwmZAo2l';
+const FACEBOOK_ACCESS_TOKEN = 'EAAUeK8KSZCGkBPRdxw5tneWAyoGXHkTNVRTdstR1MZBOWzWUKvHdAK99BokbmKS5RT8lyPkS4Ii2Dyv6Yx9mM07C9Jvhm4TXKMPwfDVubOxrtRiNzoee5FhRG34S4NDDsoD2TrGa6MJLZCbuuJZAKZCdMNA42twoku1w6HEKwpKEiFi1DJao4q3x7FiPZBXWE0TWZAQ87ZBo';
 
 // Imgur Client ID for API calls. Get one from your Imgur account.
 // This should also be an environment variable.
