@@ -79,7 +79,7 @@ const showGroupPage = async (req, res) => {
       }
      let usersByHobby = await userService.getUsersByHobbyId(hobbyId);
      let users = await userService.getUsers();
-     let usersNotInHobby = users.filter(x=> usersByHobby.some(y => y._id.toString() == x._id.toString()) == false);
+     let usersNotInHobby = users.filter(x=>x.isDeleted == false).filter(x=> usersByHobby.some(y => y._id.toString() == x._id.toString()) == false);
      let isHobbyOwner = hobby.createdBy ? req.session.user._id.toString() == hobby.createdBy.toString() : false;
       res.render('hobbies/group', { hobby: hobby, user: req.session.user, isHobbyOwner, usersByHobby, usersNotInHobby });
     })
