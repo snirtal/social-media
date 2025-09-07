@@ -26,8 +26,6 @@ router.route('/:id')
   .patch(postController.updatePost)
   .delete(postController.deletePost);
 
-router.route('/fb/post/:id')
-  .get(postController.showSinglePost)
 
 router.post('/about/search', postController.aboutSearch);
   

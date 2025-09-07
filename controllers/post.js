@@ -116,10 +116,6 @@ const getHobbyPosts = async (req, res) => {
   }
 };
 
-const showSinglePost = async (req, res) => {
-  let post = await postService.getPostById(req.params.id);
-  res.render('posts/view', { post: post });
-};
 
 const createHobbyPost = async (req, res) => {
   if (req.session.user) {
@@ -176,10 +172,7 @@ const updatePost = async (req, res) => {
   res.json(post);
 };
 
-const showSinglePost = async (req,res) => {
-  let post = await postService.getPostById(req.params.id);
-  res.render('posts/view', {post: post})
-}
+
 
 
 const aboutSearch = async (req,res) => {
@@ -187,7 +180,6 @@ const aboutSearch = async (req,res) => {
     const today = new Date(req.body.from); 
 const lastWeek = new Date(req.body.to);
 
-lastWeek.setDate(today.getDate() - 7);
     let lastWeekPosts = await postService.searchPostsByDates(today,lastWeek)
      res.json({lastWeekPosts: lastWeekPosts?.length });
 
@@ -198,5 +190,5 @@ const deletePost = async (req, res) => {
   res.json({ message: 'Deleted successfully' });
 };
 
-module.exports = { showPostStatistics,aboutSearch, showSinglePost, createPost, getPosts, getPost, updatePost, deletePost, createHobbyPost, getHobbyPosts, toggleLike };
+module.exports = { showPostStatistics,aboutSearch, createPost, getPosts, getPost, updatePost, deletePost, createHobbyPost, getHobbyPosts, toggleLike };
 
