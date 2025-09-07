@@ -1,14 +1,89 @@
 const postService = require('../services/post');
 const hobbyService = require('../services/hobby');
 const userService = require('../services/user');
+const axios = require('axios');
+const fs = require('fs').promises; // Import the promises-based fs module
+const path = require('path');
+
+// IMPORTANT: Never hardcode sensitive information like this in a real application.
+// Use environment variables instead.
+const FACEBOOK_PAGE_ID = '822706394248558';
+const FACEBOOK_ACCESS_TOKEN = 'EAAUeK8KSZCGkBPSE1uKEtw2M25KRXDltqW4a0hk9B5W9bwgltXmbq3YoyaCSsfNzssiGo8n9QtevQ4769PGOAqMp8oH2QJN2NFYqLNnpspWrKBZAZBjdZC9Agq3hfNQmUy460MyuhITXTF6ZBMwp1a0R4xPEfDzL3GSK2l8FCZCa3i1fSznwALjSUXyoGmlmXC7mrIgJnN8wEnVZAOQy0cs4OsTcqbS2qipLWwmZAo2l';
+
+// Imgur Client ID for API calls. Get one from your Imgur account.
+// This should also be an environment variable.
+const IMGUR_CLIENT_ID = 'YOUR_IMGUR_CLIENT_ID_HERE';
+
+async function uploadImageToImgur(filePath) {
+  try {
+    const imageData = await fs.readFile(filePath);
+    const base64Image = imageData.toString('base64');
+
+    const response = await axios.post(
+      'https://api.imgur.com/3/upload',
+      {
+        image: base64Image,
+        type: 'base64',
+      },
+      {
+        headers: {
+          Authorization: `Client-ID ${IMGUR_CLIENT_ID}`,
+        },
+      }
+    );
+
+    return response.data.data.link;
+  } catch (error) {
+    console.error('Error uploading image to Imgur:', error.response ? error.response.data : error.message);
+    return null;
+  }
+}
+
+// Function to share the post to Facebook
+async function sharePostToFacebook(content, imageUrl) {
+  try {
+    let endpoint = `https://graph.facebook.com/v19.0/${FACEBOOK_PAGE_ID}/feed`;
+    let postData = {
+      message: content,
+      access_token: FACEBOOK_ACCESS_TOKEN
+    };
+
+    // If a public image URL is present, change the endpoint and include the image URL
+    if (imageUrl) {
+      endpoint = `https://graph.facebook.com/v19.0/${FACEBOOK_PAGE_ID}/photos`;
+      postData = {
+        url: imageUrl, // This URL must be publicly accessible
+        message: content,
+        access_token: FACEBOOK_ACCESS_TOKEN
+      };
+    }
+
+    const response = await axios.post(endpoint, postData);
+    console.log('Post successfully shared to Facebook:', response.data);
+  } catch (error) {
+    console.error('Error sharing post to Facebook:', error.response ? error.response.data : error.message);
+  }
+}
+
 const createPost = async (req, res) => {
   const { content } = req.body;
-
   const userId = req.session.user._id;
-
-  const imageFile = req.file ?req.file.path : '';
-
-  let post = await postService.createPost(userId,content,imageFile);
+  
+  // Use a variable to hold the final, public URL for the image
+  let publicImageUrl = '';
+  
+  // Check if a file was uploaded
+  if (req.file) {
+    // Upload the image to Imgur and get the public URL
+    publicImageUrl = await uploadImageToImgur(req.file.path);
+  }
+  const imageFile = publicImageUrl;
+  
+  let post = await postService.createPost(userId, content, req.file.path);
+  
+  // Automatically share the new post to Facebook
+  await sharePostToFacebook(content, imageFile);
+  
   res.json(post);
 };
 
@@ -41,47 +116,60 @@ const getHobbyPosts = async (req, res) => {
   }
 };
 
-const createHobbyPost = async (req, res) => {
-
-  if(req.session.user) {
-  const { content, hobbyId } = req.body;
-
-  const userId = req.session.user._id;
-
-  const imageFile = req.file ? req.file.path : ''; 
-
-  try {
-    const post = await postService.createHobbyPost(userId, content, hobbyId, imageFile);
-
-    if (!post) {
-      return res.status(500).json({ message: 'Failed to create post in service.' });
-    }
-
-    const hobby = await hobbyService.getHobbyById(hobbyId);
-
-    if (!hobby) {
-      return res.status(404).json({ message: 'Hobby not found after post creation.' });
-    }
-
-    let isHobbyOwner = hobby.createdBy ? userId.toString() === hobby.createdBy.toString() : false;
-    const usersByHobby = await userService.getUsersByHobbyId(hobby.id);
-         let users = await userService.getUsers();
-     let usersNotInHobby = users.filter(x=> usersByHobby.some(y => y._id.toString() == x._id.toString()) == false);
-    res.render('hobbies/group', { hobby: hobby, user: req.session.user, isHobbyOwner,usersByHobby, usersNotInHobby });
-
-  } catch (error) {
-    console.error('Error in createHobbyPost:', error);
-    // Send a JSON error response instead of just 500
-    res.status(500).json({ message: 'Internal server error while creating hobby post.', error: error.message });
-  }
-} else {
-  res.render('user/home')
-}
+const showSinglePost = async (req, res) => {
+  let post = await postService.getPostById(req.params.id);
+  res.render('posts/view', { post: post });
 };
-const toggleLike = async (req,res) => {
- const like = await postService.toggleLike(req.params.id,req.body.userId);
- return res.status(200).json(like);
-}
+
+const createHobbyPost = async (req, res) => {
+  if (req.session.user) {
+    const { content, hobbyId } = req.body;
+    const userId = req.session.user._id;
+
+    // Use a variable to hold the final, public URL for the image
+    let publicImageUrl = '';
+    
+    // Check if a file was uploaded
+    if (req.file) {
+      // Upload the image to Imgur and get the public URL
+      publicImageUrl = await uploadImageToImgur(req.file.path);
+    }
+    const imageFile = publicImageUrl;
+
+    try {
+      const post = await postService.createHobbyPost(userId, content, hobbyId, req.file.path);
+
+      if (!post) {
+        return res.status(500).json({ message: 'Failed to create post in service.' });
+      }
+
+      // Automatically share the new post to Facebook
+      await sharePostToFacebook(content, imageFile);
+
+      const hobby = await hobbyService.getHobbyById(hobbyId);
+
+      if (!hobby) {
+        return res.status(404).json({ message: 'Hobby not found after post creation.' });
+      }
+
+      let isHobbyOwner = hobby.createdBy ? userId.toString() === hobby.createdBy.toString() : false;
+      const usersByHobby = await userService.getUsersByHobbyId(hobby.id);
+      let users = await userService.getUsers();
+      let usersNotInHobby = users.filter(x => usersByHobby.some(y => y._id.toString() == x._id.toString()) == false);
+      res.render('hobbies/group', { hobby: hobby, user: req.session.user, isHobbyOwner, usersByHobby, usersNotInHobby });
+
+    } catch (error) {
+      console.error('Error in createHobbyPost:', error);
+      res.status(500).json({ message: 'Internal server error while creating hobby post.', error: error.message });
+    }
+  } else {
+    res.render('user/home');
+  }
+};
+const toggleLike = async (req, res) => {
+  const like = await postService.toggleLike(req.params.id, req.body.userId);
+  return res.status(200).json(like);
+};
 const updatePost = async (req, res) => {
   const post = await postService.updatePost(req.params.id, req.body.content);
   if (!post) return res.status(404).json({ errors: ['Post not found'] });
@@ -111,3 +199,4 @@ const deletePost = async (req, res) => {
 };
 
 module.exports = { showPostStatistics,aboutSearch, showSinglePost, createPost, getPosts, getPost, updatePost, deletePost, createHobbyPost, getHobbyPosts, toggleLike };
+
