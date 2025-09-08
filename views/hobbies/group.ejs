@@ -11,7 +11,8 @@
 </head>
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v20.0&appId=24150042914685949&autoLogAppEvents=1"></script>
 
-<body>
+
+    <body>
     <%- include('../user/layout', { showFloatingRedirect: true }) %>
     <div class="container">
         <div class="group-header">
@@ -103,13 +104,6 @@
                                     <%= post.likes ? post.likes.length : 0 %>
                                 </span>
                             </div>
-                                                        <div class="share">
-  <a href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:3000/posts/fb/post/<%= post._id %>"
-     target="_blank" 
-     rel="noopener noreferrer">
-     <i class="fab fa-facebook"></i> Share
-  </a>
-</div>
                         </div>
                     </div>
                 <% }) %>
