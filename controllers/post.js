@@ -27,7 +27,8 @@ async function sharePostToFacebook(content) {
 const createPost = async (req, res) => {
   const { content } = req.body;
   const userId = req.session.user._id;
-  let post = await postService.createPost(userId, content, req.file.path);
+  let file = req?.file?.path ? req.file.path : ''
+  let post = await postService.createPost(userId, content,file);
   
   await sharePostToFacebook(content);
   
@@ -68,8 +69,9 @@ const createHobbyPost = async (req, res) => {
   if (req.session.user) {
     const { content, hobbyId } = req.body;
     const userId = req.session.user._id;
+    let file = req?.file?.path ? req.file.path : '';
     try {
-      const post = await postService.createHobbyPost(userId, content, hobbyId, req.file.path);
+      const post = await postService.createHobbyPost(userId, content, hobbyId, file);
 
       if (!post) {
         return res.status(500).json({ message: 'Failed to create post in service.' });
